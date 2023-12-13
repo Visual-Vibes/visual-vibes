@@ -10,7 +10,6 @@ export default function Home() {
   return (
     <div>
       <div className="flex flex-row">
-        <Navbar />
         <Clock />
       </div>
     </div>
