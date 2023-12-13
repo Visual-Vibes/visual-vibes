@@ -1,15 +1,17 @@
 'use client'
 import React from 'react';
 import { useState } from 'react';
-import Form from '../../components/ui/Form';
 
 
 export default function Vibes() {
   const [selectedImage, setSelectedImage] = useState(null);
   
-  const onImageUpload = (e) => {
+  const onImageUpload = (e: any) => {
     console.log(e.target.files[0])
     setSelectedImage(e.target.files[0])
+
+
+    //Needs to check for 
   }
   return (
     <div>
