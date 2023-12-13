@@ -1,48 +1,50 @@
-'use client'
-import React from 'react';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+"use client";
+import React from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Vibes() {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imageUploadedText, setImageUploadedText] = useState('Get started by uploading your image!');
+  const [imageUploadedText, setImageUploadedText] = useState(
+    "Get started by uploading your image!"
+  );
   const router = useRouter();
 
   const checkImageRequirements = (image: any) => {
     // TODO: Implement image req check
     return true;
-  }
+  };
 
   const onImageUpload = (e: any) => {
-    console.log(e.target.files[0])
+    console.log(e.target.files[0]);
     if (checkImageRequirements(e.target.files[0]) == true) {
-      setSelectedImage(e.target.files[0])
-      setImageUploadedText('Image Upload Success!')
+      setSelectedImage(e.target.files[0]);
+      setImageUploadedText("Image Upload Success!");
     }
-  }
+  };
 
   async function runOpenAIGen(e: any) {
     e.preventDefault();
     if (!selectedImage) {
-      console.error('Please upload an image before submitting.');
+      console.error("Please upload an image before submitting.");
       return;
     }
 
     // Create a FormData object and append the image file to it
     const formData = new FormData();
-    formData.append('myImage', selectedImage);
+    formData.append("myImage", selectedImage);
 
     // Send data to the '/api/generate' route
     try {
-      const response = await fetch('/api/generate', {
-        method: 'POST',
+      const response = await fetch("/api/generate", {
+        method: "POST",
         body: formData,
       });
 
       // Handle the response as needed
-      console.log('Server response:', response);
+      console.log("Server response:", response);
     } catch (error) {
-      console.error('Error during fetch:', error);
+      console.error("Error during fetch:", error);
     }
   }
 
@@ -61,12 +63,18 @@ export default function Vibes() {
               />
               <br />
               <button
-                onClick={() => {setSelectedImage(null); setImageUploadedText('Please upload a new image')}}>Remove</button>
+                onClick={() => {
+                  setSelectedImage(null);
+                  setImageUploadedText("Please upload a new image");
+                }}
+              >
+                Remove
+              </button>
             </div>
           )}
           <br />
-            <form onSubmit={runOpenAIGen}>
-              <input
+          <form onSubmit={runOpenAIGen}>
+            <input
               className="block w-full text-sm text-cyan-200
                 file:mr-4 file:py-2 file:px-4 file:rounded-md
                 file:border-0 file:text-sm file:font-semibold
@@ -75,7 +83,7 @@ export default function Vibes() {
               type="file"
               name="uploadedImage"
               onChange={onImageUpload}
-              />
+            />
 
             {/* <input
               type="text"
@@ -85,11 +93,16 @@ export default function Vibes() {
             <div className="pt-8 text-base font-semibold leading-7">
               <p className="text-red-400">Ready?</p>
               <p>
-                <button type="submit" className="text-orange-500 hover:text-sky-600">Take me to the vibes! &rarr;</button>
+                <button
+                  type="submit"
+                  className="text-orange-500 hover:text-sky-600"
+                >
+                  Take me to the vibes! &rarr;
+                </button>
               </p>
             </div>
           </form>
-            {/* TODO add 'add to gallery' button */}
+          {/* TODO add 'add to gallery' button */}
         </div>
       </div>
     </div>
