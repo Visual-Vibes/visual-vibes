@@ -1,8 +1,11 @@
 'use client'
 import React from 'react';
 import { useState } from 'react';
+import ImageUploader from "@/components/ImageUploader";
+import ImageDisplay from '@/components/ImageDisplay';
+import FieldInput from '@/components/FieldInput';
 
-export default function Vibes() {
+  export default function Vibes() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [apiKey, setApiKey] = useState('');
   const [statusText, setStatusText] = useState('Get started by uploading your image!');
@@ -57,55 +60,25 @@ export default function Vibes() {
       <div className="relative bg-zinc-800 px-6 pt-2 pb-8 shadow-xl ring-1 ring-gray-400/10 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10">
         <div className="space-y-6 py-8 text-base leading-7 text-white">
           <h2 className="text-yellow-400">{statusText}</h2>
-
-          {selectedImage && (
-            <div>
-              <img
-                alt="not found"
-                width={"250px"}
-                src={URL.createObjectURL(selectedImage)}
-              />
-              <br />
-              <button
-                onClick={() => {setSelectedImage(null); setStatusText('Please upload a new image')}}>Remove</button>
-            </div>
-          )}
+          <ImageDisplay image={selectedImage} onRemove={() => { setSelectedImage(null); setStatusText('Please upload a new image') }} />
           <br />
+
           {/* Image Input */}
-          <div>
-            <input
-            className="block w-full text-sm text-cyan-200
-              file:mr-4 file:py-2 file:px-4 file:rounded-md
-              file:border-0 file:text-sm file:font-semibold
-              file:bg-gray-500 file:text-lime-300
-              hover:file:bg-green-100"
-            type="file"
-            name="uploadedImage"
-            onChange={onImageUpload}
-            />
-          </div>
+          <ImageUploader onChange={onImageUpload} />
+
           {/* API Key Input */}
-          <div>
-            <p className="text-blue-400"> Enter your OpenAI API Key </p>
-            <input
-              type="text"
-              name="Api Key"
-              style={{ color: 'black', padding: '0.2lh'}}
-              onChange={(e) => {setApiKey(e.target.value)}}
-            />
-          </div>
+          <FieldInput onChange={(e: any) => {setApiKey(e.target.value)}}/>
+
           {/* Make Public Button */}
           <p> <input type="checkbox" id="makePublic" name="Make Public"
                     defaultChecked={true} onChange={(e) => {setMakePublic(e.target.checked)}}/>
           <label htmlFor="makePublic"> Make this submission public!</label></p>
+
           {/* Submission Button */}
           <div className="pt-8 text-base font-semibold leading-7">
             <p className="text-red-400">Ready?</p>
-            <p>
-              <button onClick={runOpenAIGen} className="text-orange-500 hover:text-sky-600">Take me to the vibes! &rarr;</button>
-            </p>
+            <p> <button onClick={runOpenAIGen} className="text-orange-500 hover:text-sky-600">Take me to the vibes! &rarr;</button> </p>
           </div>
-            {/* TODO add 'add to gallery' button */}
         </div>
       </div>
     </div>
