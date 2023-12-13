@@ -1,14 +1,14 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function Vibes() {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imageUploadedText, setImageUploadedText] = useState(
+  const [apiKey, setApiKey] = useState("");
+  const [statusText, setStatusText] = useState(
     "Get started by uploading your image!"
   );
-  const router = useRouter();
+  const [makePublic, setMakePublic] = useState(true);
 
   const checkImageRequirements = (image: any) => {
     // TODO: Implement image req check
@@ -16,24 +16,29 @@ export default function Vibes() {
   };
 
   const onImageUpload = (e: any) => {
-    console.log(e.target.files[0]);
+    // console.log(e.target.files[0])
     if (checkImageRequirements(e.target.files[0]) == true) {
       setSelectedImage(e.target.files[0]);
-      setImageUploadedText("Image Upload Success!");
+      setStatusText("Image Upload Success!");
     }
   };
 
   async function runOpenAIGen(e: any) {
     e.preventDefault();
     if (!selectedImage) {
-      console.error("Please upload an image before submitting.");
+      setStatusText("Please upload an image before submitting.");
+      return;
+    }
+    if (!apiKey) {
+      setStatusText("Please add your API Key before submitting.");
       return;
     }
 
     // Create a FormData object and append the image file to it
     const formData = new FormData();
-    formData.append("myImage", selectedImage);
-
+    formData.append("starterImage", selectedImage);
+    formData.append("apiKey", apiKey);
+    formData.append("makePublic", makePublic.toString());
     // Send data to the '/api/generate' route
     try {
       const response = await fetch("/api/generate", {
@@ -52,7 +57,7 @@ export default function Vibes() {
     <div className="relative flex min-h-screen flex-col justify-center overflow-hidden py-6 sm:py-12">
       <div className="relative bg-zinc-800 px-6 pt-2 pb-8 shadow-xl ring-1 ring-gray-400/10 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10">
         <div className="space-y-6 py-8 text-base leading-7 text-white">
-          <h2 className="text-yellow-400">{imageUploadedText}</h2>
+          <h2 className="text-yellow-400">{statusText}</h2>
 
           {selectedImage && (
             <div>
@@ -65,7 +70,7 @@ export default function Vibes() {
               <button
                 onClick={() => {
                   setSelectedImage(null);
-                  setImageUploadedText("Please upload a new image");
+                  setStatusText("Please upload a new image");
                 }}
               >
                 Remove
@@ -73,35 +78,57 @@ export default function Vibes() {
             </div>
           )}
           <br />
-          <form onSubmit={runOpenAIGen}>
+          {/* Image Input */}
+          <div>
             <input
               className="block w-full text-sm text-cyan-200
-                file:mr-4 file:py-2 file:px-4 file:rounded-md
-                file:border-0 file:text-sm file:font-semibold
-                file:bg-gray-500 file:text-lime-300
-                hover:file:bg-green-100"
+              file:mr-4 file:py-2 file:px-4 file:rounded-md
+              file:border-0 file:text-sm file:font-semibold
+              file:bg-gray-500 file:text-lime-300
+              hover:file:bg-green-100"
               type="file"
               name="uploadedImage"
               onChange={onImageUpload}
             />
-
-            {/* <input
+          </div>
+          {/* API Key Input */}
+          <div>
+            <p className="text-blue-400"> Enter your OpenAI API Key </p>
+            <input
               type="text"
               name="Api Key"
-              style={{ color: 'black', padding: '0.2lh'}}
-            /> */}
-            <div className="pt-8 text-base font-semibold leading-7">
-              <p className="text-red-400">Ready?</p>
-              <p>
-                <button
-                  type="submit"
-                  className="text-orange-500 hover:text-sky-600"
-                >
-                  Take me to the vibes! &rarr;
-                </button>
-              </p>
-            </div>
-          </form>
+              style={{ color: "black", padding: "0.2lh" }}
+              onChange={(e) => {
+                setApiKey(e.target.value);
+              }}
+            />
+          </div>
+          {/* Make Public Button */}
+          <p>
+            {" "}
+            <input
+              type="checkbox"
+              id="makePublic"
+              name="Make Public"
+              defaultChecked={true}
+              onChange={(e) => {
+                setMakePublic(e.target.checked);
+              }}
+            />
+            <label htmlFor="makePublic"> Make this submission public!</label>
+          </p>
+          {/* Submission Button */}
+          <div className="pt-8 text-base font-semibold leading-7">
+            <p className="text-red-400">Ready?</p>
+            <p>
+              <button
+                onClick={runOpenAIGen}
+                className="text-orange-500 hover:text-sky-600"
+              >
+                Take me to the vibes! &rarr;
+              </button>
+            </p>
+          </div>
           {/* TODO add 'add to gallery' button */}
         </div>
       </div>
