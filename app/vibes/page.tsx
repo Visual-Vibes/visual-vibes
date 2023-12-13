@@ -22,17 +22,30 @@ export default function Vibes() {
   }
 
   async function runOpenAIGen(e: any) {
-    // Prevent default form submission
     e.preventDefault();
-    const formData = new FormData(e.currentTarget)  
+    if (!selectedImage) {
+      console.error('Please upload an image before submitting.');
+      return;
+    }
 
-    // Send data to generate route
-    await fetch('/api/generate', {
-      method: 'POST',
-      body: formData,
-    })
+    // Create a FormData object and append the image file to it
+    const formData = new FormData();
+    formData.append('myImage', selectedImage);
+
+    // Send data to the '/api/generate' route
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        body: formData,
+      });
+
+      // Handle the response as needed
+      console.log('Server response:', response);
+    } catch (error) {
+      console.error('Error during fetch:', error);
+    }
   }
-  
+
   return (
     <div className="relative flex min-h-screen flex-col justify-center overflow-hidden py-6 sm:py-12">
       <div className="relative bg-zinc-800 px-6 pt-2 pb-8 shadow-xl ring-1 ring-gray-400/10 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10">
@@ -52,7 +65,7 @@ export default function Vibes() {
             </div>
           )}
           <br />
-            <form>
+            <form onSubmit={runOpenAIGen}>
               <input
               className="block w-full text-sm text-cyan-200
                 file:mr-4 file:py-2 file:px-4 file:rounded-md
@@ -60,7 +73,7 @@ export default function Vibes() {
                 file:bg-gray-500 file:text-lime-300
                 hover:file:bg-green-100"
               type="file"
-              name="myImage"
+              name="uploadedImage"
               onChange={onImageUpload}
               />
 
@@ -72,7 +85,7 @@ export default function Vibes() {
             <div className="pt-8 text-base font-semibold leading-7">
               <p className="text-red-400">Ready?</p>
               <p>
-                <button onClick={runOpenAIGen} className="text-orange-500 hover:text-sky-600">Take me to the vibes! &rarr;</button>
+                <button type="submit" className="text-orange-500 hover:text-sky-600">Take me to the vibes! &rarr;</button>
               </p>
             </div>
           </form>
