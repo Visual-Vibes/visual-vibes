@@ -33,8 +33,6 @@ export default function Vibes() {
 
   async function runOpenAIGen(e: any) {
     //TODO: PREVENT SUBMISSION WHILE LOADING
-    setGenerating('generating');
-    setStatusText("Vibes generating... please be patient!");
     e.preventDefault();
     if (!selectedImage) {
       setStatusText("Please upload an image before submitting.");
@@ -45,6 +43,9 @@ export default function Vibes() {
       return;
     }
 
+    setGenerating('generating');
+    setStatusText("Vibes generating... please be patient!");
+    
     // Create a FormData object and append the image file to it
     const formData = new FormData();
     formData.append("starterImage", selectedImage);
