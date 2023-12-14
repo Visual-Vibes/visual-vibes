@@ -17,12 +17,11 @@ export async function POST(request: NextRequest) {
   }
 
   // Assuming 'fileName' is the name of your uploaded image file
-  
+
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
-  const imgString = `data:${file.type};base64,${buffer.toString('base64')}`
+  const imgString = `data:${file.type};base64,${buffer.toString("base64")}`;
   // Get image type and construct image string
-
 
   await writeFile(`public/upload/${file.name}`, buffer);
   console.log(`open ${path} to see the uploaded file`);
@@ -33,14 +32,14 @@ export async function POST(request: NextRequest) {
   );
 
   // send the image(buffer), apiKey, and
-  const label = await getVibes(imgString, apiKey, removeFileExtension(file.name), supabase);
+  const res = await getVibes(imgString, apiKey, supabase);
 
   // Add sequence entry into table to specify location of sequence, publication status, and labels
   const entry = [
     {
-      galleryFolder: removeFileExtension(file.name),
+      galleryFolder: res!.folder,
       isPublic: isPublic,
-      label: label,
+      label: res!.mainSubject,
       description: "TODO: optional description",
     },
   ];
@@ -49,10 +48,10 @@ export async function POST(request: NextRequest) {
     .from("sequences")
     .insert(entry);
   if (error) {
-    console.log("Error inserting sequence entry into table");
+    console.log("Error inserting sequence entry into table", error);
     NextResponse.json({ success: false });
   }
-  console.log('Vibes Generated!')
+  console.log("Vibes Generated!");
   return NextResponse.json({ success: true });
 }
 
