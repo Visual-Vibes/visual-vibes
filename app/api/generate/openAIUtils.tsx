@@ -108,7 +108,7 @@ export const generateImagePrompts = async (
       throw "Got null response in generateImagePrompts";
     }
 
-    promptList.push(response.choices[0].message.content)// + '; I NEED the color of the main character to be the same. DO NOT change its color');
+    promptList.push(response.choices[0].message.content + '; I NEED the image to be realistic. DO NOT create an illustration.');
   }
   return promptList;
 };
