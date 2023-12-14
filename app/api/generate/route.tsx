@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     };
 
   const toRespond = NextResponse.json(responseData);
-  console.log(toRespond);
+  // console.log(toRespond);
   return toRespond;
 }
 
