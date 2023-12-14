@@ -4,15 +4,16 @@ import { useState } from "react";
 import ImageUploader from "@/components/ImageUploader";
 import ImageDisplay from "@/components/ImageDisplay";
 import FieldInput from "@/components/FieldInput";
-
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function Vibes() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [apiKey, setApiKey] = useState("");
   const [statusText, setStatusText] = useState(
     "Get started by uploading your image!"
-  );
+    );
   const [makePublic, setMakePublic] = useState(true);
+  const [generating, setGenerating] = useState(false)
 
   const checkImageRequirements = (image: any) => {
     // TODO: Implement image req check
@@ -29,6 +30,8 @@ export default function Vibes() {
 
   async function runOpenAIGen(e: any) {
     //TODO: PREVENT SUBMISSION WHILE LOADING
+    setGenerating(true);
+    setStatusText("Vibes generating... please be patient!");
     e.preventDefault();
     if (!selectedImage) {
       setStatusText("Please upload an image before submitting.");
@@ -63,53 +66,61 @@ export default function Vibes() {
       <div className="relative bg-zinc-800 px-6 pt-2 pb-8 shadow-xl ring-1 ring-gray-400/10 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10">
         <div className="space-y-6 py-8 text-base leading-7 text-white">
           <h2 className="text-yellow-400">{statusText}</h2>
-          <ImageDisplay
-            image={selectedImage}
-            onRemove={() => {
-              setSelectedImage(null);
-              setStatusText("Please upload a new image");
-            }}
-          />
-          <br />
+          {(!generating) && 
+            <div>
+              <ImageDisplay
+                image={selectedImage}
+                onRemove={() => {
+                  setSelectedImage(null);
+                  setStatusText("Please upload a new image");
+                }}
+              />
+              <br />
 
-          {/* Image Input */}
-          <ImageUploader onChange={onImageUpload} />
+              {/* Image Input */}
+              <ImageUploader onChange={onImageUpload} />
 
-          {/* API Key Input */}
-          <FieldInput
-            onChange={(e: any) => {
-              setApiKey(e.target.value);
-            }}
-          />
+              {/* API Key Input */}
+              <FieldInput
+                onChange={(e: any) => {
+                  setApiKey(e.target.value);
+                }}
+              />
 
-          {/* Make Public Button */}
-          <p>
-            {" "}
-            <input
-              type="checkbox"
-              id="makePublic"
-              name="Make Public"
-              defaultChecked={true}
-              onChange={(e) => {
-                setMakePublic(e.target.checked);
-              }}
-            />
-            <label htmlFor="makePublic"> Make this submission public!</label>
-          </p>
+              {/* Make Public Button */}
+              <p>
+                {" "}
+                <input
+                  type="checkbox"
+                  id="makePublic"
+                  name="Make Public"
+                  defaultChecked={true}
+                  onChange={(e) => {
+                    setMakePublic(e.target.checked);
+                  }}
+                />
+                <label htmlFor="makePublic"> Make this submission public!</label>
+              </p>
 
-          {/* Submission Button */}
-          <div className="pt-8 text-base font-semibold leading-7">
-            <p className="text-red-400">Ready?</p>
-            <p>
-              {" "}
-              <button
-                onClick={runOpenAIGen}
-                className="text-orange-500 hover:text-sky-600"
-              >
-                Take me to the vibes! &rarr;
-              </button>{" "}
-            </p>
-          </div>
+              {/* Submission Button */}
+              <div className="pt-8 text-base font-semibold leading-7">
+                <p className="text-red-400">Ready?</p>
+                <p>
+                  {" "}
+                  <button
+                    onClick={runOpenAIGen}
+                    className="text-orange-500 hover:text-sky-600"
+                  >
+                    Take me to the vibes! &rarr;
+                  </button>{" "}
+                </p>
+              </div>
+            </div>
+          }
+
+          {(generating) && 
+            <LoadingSpinner />
+          }
         </div>
       </div>
     </div>
