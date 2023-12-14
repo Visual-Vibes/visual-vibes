@@ -5,6 +5,7 @@ import ImageUploader from "@/components/ImageUploader";
 import ImageDisplay from "@/components/ImageDisplay";
 import FieldInput from "@/components/FieldInput";
 
+
 export default function Vibes() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [apiKey, setApiKey] = useState("");
@@ -27,6 +28,7 @@ export default function Vibes() {
   };
 
   async function runOpenAIGen(e: any) {
+    //TODO: PREVENT SUBMISSION WHILE LOADING
     e.preventDefault();
     if (!selectedImage) {
       setStatusText("Please upload an image before submitting.");
