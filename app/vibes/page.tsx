@@ -59,6 +59,7 @@ export default function Vibes() {
     } catch (error) {
       console.error("Error during fetch:", error);
     }
+    setGenerating(false);
   }
 
   return (

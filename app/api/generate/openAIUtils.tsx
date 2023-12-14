@@ -54,7 +54,7 @@ async function getMainSubject(startImage: string, openAIClient: OpenAI) {
         content: [
           {
             type: "text",
-            text: "Give me the following response: 'Main Subject: *simple description of the main subject goes here, as it would be used for image generation*' only respond with this text.",
+            text: "Give me the following response: 'Main Character: *simple description of the main character in the image goes here, as it would be used for image generation*' only respond with this text.",
           },
           {
             type: "image_url",
@@ -79,19 +79,19 @@ export const generateImagePrompts = async (
 ) => {
   const wakeup = await constructImagePrompt(
     mainSubject,
-    "it's time to wake up! The main subject is tunring the alarm clock off and looking very sleepy and disgruntled."
+    "it's morning! The main character is waking up from a long nights rest."
   );
   const morning = await constructImagePrompt(
     mainSubject,
-    "The main subject is getting ready for the day by sitting at their table and a quality breakfast that they have cooked."
+    "The main character is getting ready for the day by sitting at their table and a quality breakfast that they have cooked."
   );
   const noon = await constructImagePrompt(
     mainSubject,
-    "it's time for work! The main subject is at their desk, on their computer, and working through their tasks for the day."
+    "it's time for work! The main character is at their desk, on their computer, and working through their tasks for the day."
   );
   const night = await constructImagePrompt(
     mainSubject,
-    "it's bed time! The main subject is getting ready for bed by brushing their teeth."
+    "it's bed time! The main character is getting ready for bed by brushing their teeth."
   );
   const instructionsList = [wakeup]; //[wakeup, morning, noon, night];
 
@@ -106,7 +106,7 @@ export const generateImagePrompts = async (
       throw "Got null response in generateImagePrompts";
     }
 
-    promptList.push(response.choices[0].message.content);
+    promptList.push(response.choices[0].message.content + '; I NEED the color of the main character to be the same. DO NOT change its color');
   }
   return promptList;
 };
@@ -114,9 +114,10 @@ export default generateImagePrompts;
 
 const constructImagePrompt = async (mainSubject: string, context: string) => {
   const prompt = `Give me an image generation prompt of the following-- but, the new context is ${context}:
-${mainSubject}
 
-Change the context to something witty but keep the main subject. Feel free to change the main subjects pose, action and surroundings.
+  ${mainSubject}
+
+Change the context to something witty but keep the main character. Feel free to change the main character's pose, action and surroundings.
 
 ONLY RESPOND WITH THE PROMPT. DO NOT INCLUDE 'GENERATE AN IMAGE'
 `;
@@ -133,6 +134,7 @@ const generateImages = async (
   var index = 0;
   const revised_prompts = [];
   for (const imagePrompt of imagePrompts) {
+
     const response = await openAIClient.images.generate({
       model: "dall-e-3",
       prompt: imagePrompt,
