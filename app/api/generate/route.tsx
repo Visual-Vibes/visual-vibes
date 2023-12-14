@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { SupabaseClient, createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile } from "fs/promises";
 import { getVibes, generateImagePrompts } from "./openAIUtils";
@@ -52,9 +52,52 @@ export async function POST(request: NextRequest) {
     NextResponse.json({ success: false });
   }
   console.log("Vibes Generated!");
-  return NextResponse.json({ success: true });
+
+  // Get url list
+  const urlList = await getImageUrlsInFolder(res!.folder, 'gallery', supabase);
+
+  // Return a NextResponse with the defined structure
+  const responseData = {
+      success: true,
+      urls: urlList, // Rename the property to 'urls' or any name you prefer
+    };
+
+  const toRespond = NextResponse.json(responseData);
+  console.log(toRespond);
+  return toRespond;
 }
 
 function removeFileExtension(filename: string): string {
   return filename.replace(/\.[^/.]+$/, "");
 }
+
+
+async function getImageUrlsInFolder(folderName: string, storageBucket: string, supabase: SupabaseClient) {
+    try {
+      const { data: files, error } = await supabase
+        .storage.from(storageBucket)  // replace with your storage bucket name
+        .list(folderName);
+
+      if (error) {
+        throw error;
+      }
+
+      if (files) {
+        // Construct URLs for each file in the folder
+        const imageUrls = files.map(file => {
+          return supabase.storage
+            .from(storageBucket)  // replace with your storage bucket name
+            .getPublicUrl(`${folderName}/${file.name}`);
+        });
+        const urlList = imageUrls.map(json => {
+          return json.data.publicUrl
+        });
+        return urlList;
+      }
+
+      return [];
+    } catch (error) {
+      console.error('Error fetching image URLs:', error);
+      throw error;
+    }
+  }

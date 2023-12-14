@@ -1,11 +1,13 @@
 "use client";
 import React from "react";
 import { useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 import ImageUploader from "@/components/ImageUploader";
 import ImageDisplay from "@/components/ImageDisplay";
 import FieldInput from "@/components/FieldInput";
 import LoadingSpinner from "@/components/LoadingSpinner";
-
+import ImageSlider from "@/components/ImageSlider";
+import { url } from "inspector";
 export default function Vibes() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [apiKey, setApiKey] = useState("");
@@ -13,7 +15,8 @@ export default function Vibes() {
     "Get started by uploading your image!"
     );
   const [makePublic, setMakePublic] = useState(true);
-  const [generating, setGenerating] = useState(false)
+  const [generating, setGenerating] = useState('not-started')
+  const [imgUrls, setImgUrls] = useState(["https://placekitten.com/500/500","https://placekitten.com/500/500","https://placekitten.com/500/500","https://placekitten.com/500/500","https://placekitten.com/500/500","https://placekitten.com/500/500"])
 
   const checkImageRequirements = (image: any) => {
     // TODO: Implement image req check
@@ -30,7 +33,7 @@ export default function Vibes() {
 
   async function runOpenAIGen(e: any) {
     //TODO: PREVENT SUBMISSION WHILE LOADING
-    setGenerating(true);
+    setGenerating('generating');
     setStatusText("Vibes generating... please be patient!");
     e.preventDefault();
     if (!selectedImage) {
@@ -54,12 +57,22 @@ export default function Vibes() {
         body: formData,
       });
 
-      // Handle the response as needed
-      console.log("Server response:", response);
+      if (response.ok) {
+        // If the response status is OK (2xx), parse the JSON data
+        var responseData = await response.json();
+        console.log(responseData);
+        // Now responseData contains the data from the API response
+      } else {
+        // Handle non-OK response (e.g., error handling)
+        console.error('Error:', response.status, response.statusText);
+      }
     } catch (error) {
-      console.error("Error during fetch:", error);
+      // Handle network or other errors
+      console.error('Error:', error);
     }
-    setGenerating(false);
+    const urlStrings = responseData.urls;
+    setImgUrls(urlStrings)
+    setGenerating('finished');
   }
 
   return (
@@ -67,7 +80,7 @@ export default function Vibes() {
       <div className="relative bg-zinc-800 px-6 pt-2 pb-8 shadow-xl ring-1 ring-gray-400/10 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10">
         <div className="space-y-6 py-8 text-base leading-7 text-white">
           <h2 className="text-yellow-400">{statusText}</h2>
-          {(!generating) && 
+          {(generating === 'not-started') && 
             <div>
               <ImageDisplay
                 image={selectedImage}
@@ -116,12 +129,17 @@ export default function Vibes() {
                   </button>{" "}
                 </p>
               </div>
-            </div>
+              </div>
           }
-
-          {(generating) && 
+          {(generating === 'generating') && 
             <LoadingSpinner />
           }
+          {(generating === 'finished') && 
+          <div>
+            <ImageSlider imageUrls={imgUrls}/>
+          </div>
+          }
+           
         </div>
       </div>
     </div>

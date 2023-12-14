@@ -6,6 +6,7 @@ import OpenAI from "openai";
 import { decode } from "base64-arraybuffer";
 import { SupabaseClient } from "@supabase/supabase-js";
 import crypto from "crypto";
+import { createClient } from "@supabase/supabase-js";
 
 export async function getVibes(
   startImage: string,
@@ -79,7 +80,7 @@ export const generateImagePrompts = async (
 ) => {
   const wakeup = await constructImagePrompt(
     mainSubject,
-    "it's morning! The main character is waking up from a long nights rest."
+    "it's morning vibes!"
   );
   const morning = await constructImagePrompt(
     mainSubject,
