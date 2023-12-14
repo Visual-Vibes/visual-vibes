@@ -55,7 +55,8 @@ async function getMainSubject(startImage: string, openAIClient: OpenAI) {
         content: [
           {
             type: "text",
-            text: "Give me the following response: 'Main Character: *simple description of the main character in the image goes here, as it would be used for image generation*' only respond with this text.",
+            text: "Provide a concise description of the main character in the image, focusing on its key features without including specific details about its surroundings or actions. "
+            + "Only respond with this text. Please include details about the defining features of the main character."
           },
           {
             type: "image_url",
@@ -80,7 +81,7 @@ export const generateImagePrompts = async (
 ) => {
   const wakeup = await constructImagePrompt(
     mainSubject,
-    "it's morning vibes!"
+    "it's morning vibes! the main character is just waking up."
   );
   const morning = await constructImagePrompt(
     mainSubject,
@@ -107,20 +108,21 @@ export const generateImagePrompts = async (
       throw "Got null response in generateImagePrompts";
     }
 
-    promptList.push(response.choices[0].message.content + '; I NEED the color of the main character to be the same. DO NOT change its color');
+    promptList.push(response.choices[0].message.content)// + '; I NEED the color of the main character to be the same. DO NOT change its color');
   }
   return promptList;
 };
 export default generateImagePrompts;
 
 const constructImagePrompt = async (mainSubject: string, context: string) => {
-  const prompt = `Give me an image generation prompt of the following-- but, the new context is ${context}:
+  const prompt = `Provide an image generation prompt with the following character, but set in a new context: ${context}:
 
   ${mainSubject}
 
-Change the context to something witty but keep the main character. Feel free to change the main character's pose, action and surroundings.
+Craft a creative and witty scenario while keeping the main character unchanged. Vary the main character's pose, action, and surroundings to reflect different situations. 
+The prompt should generate a realistic image, not something illustrated.
 
-ONLY RESPOND WITH THE PROMPT. DO NOT INCLUDE 'GENERATE AN IMAGE'
+ONLY RESPOND WITH THE PROMPT. DO NOT INCLUDE 'GENERATE AN IMAGE' OR 'MAIN CHARACTER:'.
 `;
   return prompt;
 };
