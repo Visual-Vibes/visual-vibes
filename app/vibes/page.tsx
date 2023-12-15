@@ -13,10 +13,18 @@ export default function Vibes() {
   const [apiKey, setApiKey] = useState("");
   const [statusText, setStatusText] = useState(
     "Get started by uploading your image!"
-    );
+  );
   const [makePublic, setMakePublic] = useState(true);
-  const [generating, setGenerating] = useState('not-started')
-  const [imgUrls, setImgUrls] = useState(["https://placekitten.com/500/500","https://placekitten.com/500/500","https://placekitten.com/500/500","https://placekitten.com/500/500","https://placekitten.com/500/500","https://placekitten.com/500/500"])
+  const [generating, setGenerating] = useState("not-started");
+  const [imgUrls, setImgUrls] = useState([
+    "https://placekitten.com/500/500",
+    "https://placekitten.com/500/500",
+    "https://placekitten.com/500/500",
+    "https://placekitten.com/500/500",
+    "https://placekitten.com/500/500",
+    "https://placekitten.com/500/500",
+  ]);
+  const [prevOpenAIKey, setPrevOpenAIKey] = useState("");
 
   const checkImageRequirements = (image: any) => {
     // TODO: Implement image req check
@@ -43,9 +51,10 @@ export default function Vibes() {
       return;
     }
 
-    setGenerating('generating');
+    setGenerating("generating");
     setStatusText("Vibes generating... please be patient!");
-    
+    setPrevOpenAIKey(apiKey);
+
     // Create a FormData object and append the image file to it
     const formData = new FormData();
     formData.append("starterImage", selectedImage);
@@ -61,19 +70,26 @@ export default function Vibes() {
       if (response.ok) {
         // If the response status is OK (2xx), parse the JSON data
         var responseData = await response.json();
+        if (responseData.couldNotIdentifyMainSubject) {
+          setStatusText(
+            "Could not identify a main subject in your image. Please try again with a different image."
+          );
+          setGenerating("not-started");
+          return;
+        }
         // console.log(responseData);
         // Now responseData contains the data from the API response
       } else {
         // Handle non-OK response (e.g., error handling)
-        console.error('Error:', response.status, response.statusText);
+        console.error("Error:", response.status, response.statusText);
       }
     } catch (error) {
       // Handle network or other errors
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
     const urlStrings = responseData.urls;
-    setImgUrls(urlStrings)
-    setGenerating('finished');
+    setImgUrls(urlStrings);
+    setGenerating("finished");
   }
 
   return (
@@ -81,7 +97,7 @@ export default function Vibes() {
       <div className="relative bg-zinc-800 px-6 pt-2 pb-8 shadow-xl ring-1 ring-gray-400/10 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10">
         <div className="space-y-6 py-8 text-base leading-7 text-white">
           <h2 className="text-yellow-400">{statusText}</h2>
-          {(generating === 'not-started') && 
+          {generating === "not-started" && (
             <div>
               <ImageDisplay
                 image={selectedImage}
@@ -97,6 +113,7 @@ export default function Vibes() {
 
               {/* API Key Input */}
               <FieldInput
+                placeholder={prevOpenAIKey}
                 onChange={(e: any) => {
                   setApiKey(e.target.value);
                 }}
@@ -114,7 +131,10 @@ export default function Vibes() {
                     setMakePublic(e.target.checked);
                   }}
                 />
-                <label htmlFor="makePublic"> Make this submission public!</label>
+                <label htmlFor="makePublic">
+                  {" "}
+                  Make this submission public!
+                </label>
               </p>
 
               {/* Submission Button */}
@@ -130,17 +150,14 @@ export default function Vibes() {
                   </button>{" "}
                 </p>
               </div>
-              </div>
-          }
-          {(generating === 'generating') && 
-            <LoadingSpinner />
-          }
-          {(generating === 'finished') && 
-          <div>
-            <ImageSlider imageUrls={imgUrls}/>
-          </div>
-          }
-           
+            </div>
+          )}
+          {generating === "generating" && <LoadingSpinner />}
+          {generating === "finished" && (
+            <div>
+              <ImageSlider imageUrls={imgUrls} />
+            </div>
+          )}
         </div>
       </div>
     </div>

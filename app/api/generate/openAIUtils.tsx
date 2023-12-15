@@ -26,8 +26,9 @@ export async function getVibes(
     // Pass client to getMainSubject, returns string describing main subject.
     const mainSubject = await getMainSubject(startImage, openAIClient);
     if (mainSubject == null) {
-      throw "Could not get main subject or main subject was null";
+      return { mainSubject: null, folder: null };
     }
+    console.log(mainSubject);
     // Generate image prompts using gpt-3
     const imagePrompts = await generateImagePrompts(mainSubject, openAIClient);
 
@@ -55,8 +56,9 @@ async function getMainSubject(startImage: string, openAIClient: OpenAI) {
         content: [
           {
             type: "text",
-            text: "Provide a concise description of the main character in the image, focusing on its key features without including specific details about its surroundings or actions. "
-            + "Only respond with this text. Please include details about the defining features of the main character."
+            text:
+              "Provide a concise description of the main object/character in the image, focusing on its key features without including specific details about its surroundings or actions. " +
+              "Only respond with this text. Please include details about the defining features of the main object/character. If you can not find a main object/character, please only respond with a '0'",
           },
           {
             type: "image_url",
@@ -71,6 +73,10 @@ async function getMainSubject(startImage: string, openAIClient: OpenAI) {
     max_tokens: 200,
   });
   const mainSubject = response.choices[0].message.content;
+
+  if (mainSubject === "0") {
+    return null;
+  }
   return mainSubject;
 }
 
@@ -108,7 +114,10 @@ export const generateImagePrompts = async (
       throw "Got null response in generateImagePrompts";
     }
 
-    promptList.push(response.choices[0].message.content + '; I NEED the image to be realistic. DO NOT create an illustration. Add black bars image fit in a 16:9 aspect ratio.');
+    promptList.push(
+      response.choices[0].message.content +
+        "; I NEED the image to be realistic. DO NOT create an illustration. Add black bars image fit in a 16:9 aspect ratio."
+    );
   }
   return promptList;
 };
@@ -143,7 +152,6 @@ const generateImages = async (
   var index = 0;
   const revised_prompts = [];
   for (const imagePrompt of imagePrompts) {
-
     const response = await openAIClient.images.generate({
       model: "dall-e-3",
       prompt: imagePrompt,
@@ -171,10 +179,10 @@ const generateImages = async (
     );
 
     console.log(`Original Prompt:
-    ${imagePrompt}`)
+    ${imagePrompt}`);
 
     console.log(`Revised / Final Prompt:
-    ${response.data[0].revised_prompt}`)
+    ${response.data[0].revised_prompt}`);
     index += 1;
   }
 };

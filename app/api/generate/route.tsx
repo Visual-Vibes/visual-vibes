@@ -13,7 +13,11 @@ export async function POST(request: NextRequest) {
   console.log("apiKey", apiKey);
 
   if (!file) {
-    return NextResponse.json({ success: false });
+    return NextResponse.json({
+      success: false,
+      couldNotIdentifyMainSubject: false,
+      urls: [],
+    });
   }
 
   // Assuming 'fileName' is the name of your uploaded image file
@@ -33,6 +37,23 @@ export async function POST(request: NextRequest) {
 
   // send the image(buffer), apiKey, and
   const res = await getVibes(imgString, apiKey, supabase);
+  if (!res) {
+    console.log("Error generating vibes");
+    return NextResponse.json({
+      success: false,
+      couldNotIdentifyMainSubject: false,
+      urls: [],
+    });
+  }
+
+  if (res.mainSubject == null) {
+    // Could not identify a main subject
+    return NextResponse.json({
+      success: false,
+      couldNotIdentifyMainSubject: true,
+      urls: [],
+    });
+  }
 
   // Add sequence entry into table to specify location of sequence, publication status, and labels
   const entry = [
@@ -49,18 +70,27 @@ export async function POST(request: NextRequest) {
     .insert(entry);
   if (error) {
     console.log("Error inserting sequence entry into table", error);
-    NextResponse.json({ success: false });
+    return NextResponse.json({
+      success: false,
+      couldNotIdentifyMainSubject: false,
+      urls: [],
+    });
   }
   console.log("Vibes Generated!");
 
   // Get url list
-  const urlList = await getImageUrlsInFolder(res!.folder, 'gallery', supabase);
+  const urlList = await getImageUrlsInFolder(
+    res!.folder as string,
+    "gallery",
+    supabase
+  );
 
   // Return a NextResponse with the defined structure
   const responseData = {
-      success: true,
-      urls: urlList, // Rename the property to 'urls' or any name you prefer
-    };
+    success: true,
+    urls: urlList, // Rename the property to 'urls' or any name you prefer
+    couldNotIdentifyMainSubject: false,
+  };
 
   const toRespond = NextResponse.json(responseData);
   // console.log(toRespond);
@@ -71,33 +101,36 @@ function removeFileExtension(filename: string): string {
   return filename.replace(/\.[^/.]+$/, "");
 }
 
+async function getImageUrlsInFolder(
+  folderName: string,
+  storageBucket: string,
+  supabase: SupabaseClient
+) {
+  try {
+    const { data: files, error } = await supabase.storage
+      .from(storageBucket) // replace with your storage bucket name
+      .list(folderName);
 
-async function getImageUrlsInFolder(folderName: string, storageBucket: string, supabase: SupabaseClient) {
-    try {
-      const { data: files, error } = await supabase
-        .storage.from(storageBucket)  // replace with your storage bucket name
-        .list(folderName);
-
-      if (error) {
-        throw error;
-      }
-
-      if (files) {
-        // Construct URLs for each file in the folder
-        const imageUrls = files.map(file => {
-          return supabase.storage
-            .from(storageBucket)  // replace with your storage bucket name
-            .getPublicUrl(`${folderName}/${file.name}`);
-        });
-        const urlList = imageUrls.map(json => {
-          return json.data.publicUrl
-        });
-        return urlList;
-      }
-
-      return [];
-    } catch (error) {
-      console.error('Error fetching image URLs:', error);
+    if (error) {
       throw error;
     }
+
+    if (files) {
+      // Construct URLs for each file in the folder
+      const imageUrls = files.map((file) => {
+        return supabase.storage
+          .from(storageBucket) // replace with your storage bucket name
+          .getPublicUrl(`${folderName}/${file.name}`);
+      });
+      const urlList = imageUrls.map((json) => {
+        return json.data.publicUrl;
+      });
+      return urlList;
+    }
+
+    return [];
+  } catch (error) {
+    console.error("Error fetching image URLs:", error);
+    throw error;
   }
+}
