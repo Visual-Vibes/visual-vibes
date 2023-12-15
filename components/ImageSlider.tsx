@@ -93,7 +93,7 @@ const ImageSlider: React.FC<{ imageUrls: string[] }> = ({ imageUrls }) => {
 
   return (
     <div
-      className="flex space-x-4 overflow-x-hidden overflow-y-hidden relative"
+      className="m-auto flex space-x-4 p-10 overflow-x-hidden overflow-y-hidden relative"
       ref={sliderRef}
       onMouseDown={handleDragStart}
       onMouseMove={handleDragMove}
@@ -106,7 +106,7 @@ const ImageSlider: React.FC<{ imageUrls: string[] }> = ({ imageUrls }) => {
           id={`image-${index}`}
           src={imageUrl}
           alt={`Preview ${index}`}
-          className={`w-40 h-40 cursor-pointer ${hoveredImage === index ? 'ring-2 ring-blue-500' : ''}`}
+          className={`w-40 h-40 cursor-pointer ease-in-out transform hover:scale-105 hover:shadow-xl ${hoveredImage === index ? 'ring-2 ring-blue-500' : ''}`}
           onClick={() => handleImageClick(imageUrl)}
           onMouseEnter={() => handleHoverStart(index)}
           onMouseLeave={handleHoverEnd}

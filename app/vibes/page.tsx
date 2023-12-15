@@ -61,7 +61,7 @@ export default function Vibes() {
       if (response.ok) {
         // If the response status is OK (2xx), parse the JSON data
         var responseData = await response.json();
-        console.log(responseData);
+        // console.log(responseData);
         // Now responseData contains the data from the API response
       } else {
         // Handle non-OK response (e.g., error handling)

@@ -81,15 +81,15 @@ export const generateImagePrompts = async (
 ) => {
   const wakeup = await constructImagePrompt(
     mainSubject,
-    "it's morning vibes! the main character is just waking up."
+    "It's 7 am! the main character is just waking up and is performing their morning (human-like) routine."
   );
   const morning = await constructImagePrompt(
     mainSubject,
-    "The main character is getting ready for the day by sitting at their table and a quality breakfast that they have cooked."
+    "The main character is getting ready for the day by sitting at their table with a quality breakfast that they have cooked."
   );
   const noon = await constructImagePrompt(
     mainSubject,
-    "it's time for work! The main character is at their desk, on their computer, and working through their tasks for the day."
+    "it's time for work! The main character is at their desk, on their computer, or working through their tasks for the day."
   );
   const night = await constructImagePrompt(
     mainSubject,
@@ -108,19 +108,25 @@ export const generateImagePrompts = async (
       throw "Got null response in generateImagePrompts";
     }
 
-    promptList.push(response.choices[0].message.content + '; I NEED the image to be realistic. DO NOT create an illustration.');
+    promptList.push(response.choices[0].message.content + '; I NEED the image to be realistic. DO NOT create an illustration. Add black bars image fit in a 16:9 aspect ratio.');
   }
   return promptList;
 };
 export default generateImagePrompts;
 
 const constructImagePrompt = async (mainSubject: string, context: string) => {
-  const prompt = `Provide an image generation prompt with the following character, but set in a new context: ${context}:
+  const prompt = `
+
+  Given the following subject:
 
   ${mainSubject}
 
-Craft a creative and witty scenario while keeping the main character unchanged. Vary the main character's pose, action, and surroundings to reflect different situations. 
-The prompt should generate a realistic image, not something illustrated.
+  And this context: 
+  
+  ${context}
+
+Use this information to craft a creative and witty image generation prompt while keeping the main character unchanged. Vary the main character's pose, action, and surroundings to reflect the situation. 
+The prompt should generate a realistic image, not something illustrated. The prompt should also make for a good wallpaper. Keep the defining features of the main character the same.
 
 ONLY RESPOND WITH THE PROMPT. DO NOT INCLUDE 'GENERATE AN IMAGE' OR 'MAIN CHARACTER:'.
 `;
@@ -163,6 +169,12 @@ const generateImages = async (
       response.data[0].revised_prompt as string,
       supabaseClient
     );
+
+    console.log(`Original Prompt:
+    ${imagePrompt}`)
+
+    console.log(`Revised / Final Prompt:
+    ${response.data[0].revised_prompt}`)
     index += 1;
   }
 };
