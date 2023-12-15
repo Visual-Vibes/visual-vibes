@@ -40,12 +40,18 @@ const HowItWorksPage = () => {
           </p>
         </div>
       </div>
-      <div class="flex justify-center items-center">
+      <div className="flex flex-row space-x-2 justify-center items-center">
         <Link
           href="/gallery"
           className="bg-indigo-500 text-white font-semibold mb-4 py-2 px-4 rounded hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-50"
         >
           Go To Gallery
+        </Link>
+        <Link
+          href="/vibes"
+          className="bg-indigo-500 text-white font-semibold mb-4 py-2 px-4 rounded hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-50"
+        >
+          Make Some Vibes
         </Link>
       </div>
     </div>

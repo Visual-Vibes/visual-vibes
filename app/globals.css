@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+/* body {
   background-color: #18181b;
+  background-image: url("/public/images/space-background.png"); /* Path to your space/stars image 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Optional: Makes the background fixed during scroll 
+} */
+
+.space-background {
+  background-color: #000; /* Dark base color */
+  background-image: url("/images/space-background.png"); /* Path to your space/stars image */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Optional: Makes the background fixed during scroll */
 }

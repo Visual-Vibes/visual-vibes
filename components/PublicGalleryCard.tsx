@@ -18,7 +18,7 @@ const PublicGalleryCard: React.FC<Collection> = ({
       className="bg-gray-700 max-w-sm rounded overflow-hidden shadow-lg p-2 mb-8 mx-8 transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl"
       onClick={() => router.push("/gallery/" + folder)}
     >
-      <div className="font-bold text-center text-white text-2xl mb-2">
+      <div className="font-bold text-center text-white text-lg mb-2">
         {label}
       </div>
 

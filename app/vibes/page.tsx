@@ -17,12 +17,9 @@ export default function Vibes() {
   const [makePublic, setMakePublic] = useState(true);
   const [generating, setGenerating] = useState("not-started");
   const [imgUrls, setImgUrls] = useState([
-    "https://placekitten.com/500/500",
-    "https://placekitten.com/500/500",
-    "https://placekitten.com/500/500",
-    "https://placekitten.com/500/500",
-    "https://placekitten.com/500/500",
-    "https://placekitten.com/500/500",
+    "https://kputvqghrldexbwkvwgr.supabase.co/storage/v1/object/public/gallery/00eda4f38a3dfc834c4de91cc5f73651cb6544c7/image0.png",
+    "https://kputvqghrldexbwkvwgr.supabase.co/storage/v1/object/public/gallery/00eda4f38a3dfc834c4de91cc5f73651cb6544c7/image1.png",
+    "https://kputvqghrldexbwkvwgr.supabase.co/storage/v1/object/public/gallery/00eda4f38a3dfc834c4de91cc5f73651cb6544c7/image2.png",
   ]);
   const [prevOpenAIKey, setPrevOpenAIKey] = useState("");
 
