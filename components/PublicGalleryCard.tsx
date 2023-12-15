@@ -29,9 +29,9 @@ const PublicGalleryCard: React.FC<Collection> = ({
         width={400}
         height={400}
       />
-      <div className="px-6 py-4">
+      {/* <div className="px-6 py-4">
         <p className="text-gray-200 text-base">{description}</p>
-      </div>
+      </div> */}
     </div>
   );
 };

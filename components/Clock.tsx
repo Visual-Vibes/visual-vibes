@@ -2,16 +2,25 @@
 
 import React, { useState, useEffect } from "react";
 
-const Clock = () => {
+interface ClockProps {
+  hourCount: number;
+  setHourCount: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const Clock: React.FC<ClockProps> = ({ hourCount, setHourCount }) => {
   const [hour, setHour] = useState(6);
   const [isAM, setIsAM] = useState(true);
 
   useEffect(() => {
     const timerId = setInterval(() => {
+      // Set clocks hour
       setHour((currentHour) => {
         // Increment the hour, and wrap back to 1 after 12
         return currentHour === 12 ? 1 : currentHour + 1;
       });
+
+      // set images hour to be incremented
+      setHourCount((hourCount) => (hourCount + 1) % 24);
     }, 1000); // Update every second for demonstration
 
     return () => {
@@ -30,7 +39,7 @@ const Clock = () => {
   const hourDigits = hour < 10 ? `0${hour}` : hour;
 
   return (
-    <div className="flex flex-col items-center absolute top-14 right-1/2">
+    <div className="flex flex-col items-center justify-center my-4 mx-10">
       <div className="text-white text-4xl p-3">Visual Vibes</div>
       {/* Updated class for center alignment */}
       {/* <div className="w-60 h-60 bg-cover rounded-full bg-[url('/images/upscaled-clock-nobg.png')]">
@@ -63,8 +72,6 @@ const Clock = () => {
           {hourDigits}:00 {isAM ? "AM" : "PM"}
         </div>
       </div>
-
-      <div>hello</div>
     </div>
   );
 };
