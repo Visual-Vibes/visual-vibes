@@ -16,7 +16,7 @@ export default function Vibes() {
     "Get started by uploading your image!"
   );
   const [makePublic, setMakePublic] = useState(true);
-  const [generating, setGenerating] = useState("finished");
+  const [generating, setGenerating] = useState("not-started");
   const [imgUrls, setImgUrls] = useState([
     "https://kputvqghrldexbwkvwgr.supabase.co/storage/v1/object/public/gallery/00eda4f38a3dfc834c4de91cc5f73651cb6544c7/image0.png",
     "https://kputvqghrldexbwkvwgr.supabase.co/storage/v1/object/public/gallery/00eda4f38a3dfc834c4de91cc5f73651cb6544c7/image1.png",
@@ -155,10 +155,18 @@ export default function Vibes() {
           {generating === "finished" && (
             <div>
               <ImageSlider imageUrls={imgUrls} />
-              <div className="p-4  text-center flex-col justify-center items-center" >
-                  {(!makePublic && <p className="text-red-400">Since your generation was private, it is only accessible here.</p>)}
-                  <p>Enter your email to view your generations in one place! (We will not email you at all except for signup.)</p>
-                  <Auth />
+              <div className="p-4  text-center flex-col justify-center items-center">
+                {!makePublic && (
+                  <p className="text-red-400">
+                    Since your generation was private, it is only accessible
+                    here.
+                  </p>
+                )}
+                <p>
+                  Enter your email to view your generations in one place! (We
+                  will not email you at all except for signup.)
+                </p>
+                <Auth />
               </div>
             </div>
           )}

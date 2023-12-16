@@ -101,12 +101,18 @@ export const generateImagePrompts = async (
     mainSubject,
     "it's bed time! The main character is getting ready for bed by brushing their teeth."
   );
-  const instructionsList = [wakeup]; //[wakeup, morning, noon, night];
+  const instructionsList = [wakeup, morning, noon, night];
 
   const promptList: string[] = [];
   for (const instruction of instructionsList) {
+    // Append main subject to the instruction to guarantee no loss of main subject information
+    const instructionWithSubject =
+      `Main Subject: ${mainSubject} \n\n` +
+      instruction +
+      `\n\n Make an image of the main subject in this context.`;
+
     const response = await openAIClient.chat.completions.create({
-      messages: [{ role: "user", content: `${instruction}` }],
+      messages: [{ role: "user", content: `${instructionWithSubject}` }],
       model: "gpt-3.5-turbo",
     });
 
@@ -135,9 +141,9 @@ const constructImagePrompt = async (mainSubject: string, context: string) => {
   ${context}
 
 Use this information to craft a creative and witty image generation prompt while keeping the main character unchanged. Vary the main character's pose, action, and surroundings to reflect the situation. 
-The prompt should generate a realistic image, not something illustrated. The prompt should also make for a good wallpaper. Keep the defining features of the main character the same.
+The prompt should generate a realistic image, not something illustrated. The prompt should also make for a good wallpaper. Keep the defining features of the main character the same whether the main character is a human, animal, or inanimate object.
 
-ONLY RESPOND WITH THE PROMPT. DO NOT INCLUDE 'GENERATE AN IMAGE' OR 'MAIN CHARACTER:'.
+ONLY RESPOND WITH THE PROMPT. DO NOT INCLUDE the text 'GENERATE AN IMAGE' OR 'MAIN CHARACTER:'.
 `;
   return prompt;
 };
