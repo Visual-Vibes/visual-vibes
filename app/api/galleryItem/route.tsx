@@ -2,8 +2,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from 'next/server';
 import { getImageUrlsInFolder } from '../generate/getImgUrls';
-import { randomInt } from 'crypto';
-
 export async function POST(request: NextRequest) {
   // Create supabase client
   const supabase = createClient(

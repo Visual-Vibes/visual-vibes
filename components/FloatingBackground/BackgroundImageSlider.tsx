@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 
 const BackgroundImageSlider = () => {
   const [galleryItem, setGalleryItem] = useState([]);
+  const [imageNumber, setImageNumber] = useState(1);
   const [startX, setStartX] = useState(Math.random() * screen.width - 200);
   const [imageLoaded, setImageLoaded] = useState(false); // New state variable
 
@@ -36,6 +37,10 @@ const BackgroundImageSlider = () => {
   }, []);
 
   useEffect(() => {
+    setImageNumber(Math.floor(Math.random() * galleryItem.length));
+  }, [galleryItem]);
+
+  useEffect(() => {
     let isMounted = true; // Add this line
 
     const interval = setInterval(() => {
@@ -53,7 +58,7 @@ const BackgroundImageSlider = () => {
 
   return (
     <div 
-      key={galleryItem[0]} // Add this line
+      key={galleryItem[imageNumber]} // Add this line
       style={{ 
         position: 'absolute',
         top: `-200px`,
@@ -64,8 +69,8 @@ const BackgroundImageSlider = () => {
       className="flex transition-transform m-2 blur(10px)"
     >
     <img
-      src={galleryItem[0]}
-      alt={`Preview ${galleryItem[0]}`}
+      src={galleryItem[imageNumber]}
+      alt={`Preview ${galleryItem[imageNumber]}`}
       className="w-40 h-40 cursor-pointer ease-in-out transform object-cover"
       draggable="false" // Disable default image drag behavior
       onLoad={() => setImageLoaded(true)} // New event handler
