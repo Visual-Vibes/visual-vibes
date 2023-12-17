@@ -40,7 +40,7 @@ const Clock: React.FC<ClockProps> = ({ hourCount, setHourCount }) => {
 
   return (
   
-   <div className="flex items-center">
+   <div className="flex items-center z-10">
      <div className="flex flex-col items-center justify-center my-4 mx-10 text-gray-300 bg-gray-900 p-2 rounded-lg">
         <div className="text-4xl p-3 text-purple-400">Visual Vibes</div>
         {/* Updated class for center alignment */}

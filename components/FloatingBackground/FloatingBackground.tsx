@@ -19,7 +19,7 @@ export default function FloatingBackground() {
         }
         numImages++; // Increment the counter
         console.log(numImages);
-      }, 2000); // Adjust the interval as needed
+      }, 4000); // Adjust the interval as needed
 
         return () => clearInterval(interval); // Clear interval on component unmount
       }, []);
