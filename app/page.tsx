@@ -9,25 +9,18 @@ import { useState, useEffect } from "react";
 import Clock from "@/components/Clock";
 import WelcomeImage from "@/components/WelcomeImage";
 
-// const getWelcomeImages = async () => {
-//   const response = await fetch("/api/getWelcomeImages", {
-//     method: "GET",
-//   });
-//   const data = await response.json();
-//   return data;
-// };
+import FloatingBackground from "@/components/FloatingBackground/FloatingBackground";
 
 export default function Home() {
   const [hourCount, setHourCount] = useState(6);
 
-  // const res = await getWelcomeImages();
-  // const imageUrls = res.imageUrls;
-  // const imageNames = res.imageNames;
-
   return (
-    <div className="flex flex-col space-y-10 justify-center items-center">
-      <Clock hourCount={hourCount} setHourCount={setHourCount} />
-      <WelcomeImage hourCount={hourCount} />
+    <div>
+      <FloatingBackground />
+      <div className="flex flex-row justify-center items-center z-10">
+        <Clock hourCount={hourCount} setHourCount={setHourCount} />
+        <WelcomeImage hourCount={hourCount} />
+      </div>
     </div>
   );
 }

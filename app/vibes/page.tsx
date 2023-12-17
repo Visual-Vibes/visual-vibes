@@ -167,7 +167,7 @@ export default function Vibes() {
                       here.
                     </p>
                   )}
-                  <Auth />
+                  {/* <Auth /> */}
                 </div>
               </div>
             )}

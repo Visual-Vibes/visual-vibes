@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} space-background`}>
+    <body className={`${inter.className} space-background `} style={{ backdropFilter: 'blur(10px)', height: '100vh' }}>
         <Navbar />
         {children}
       </body>
