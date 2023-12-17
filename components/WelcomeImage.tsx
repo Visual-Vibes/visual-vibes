@@ -129,7 +129,7 @@ const WelcomeImage: React.FC<WelcomeImageProps> = ({ hourCount }) => {
   }, []);
 
   return (
-    <div>
+    <div className="z-10">
       {status == "not-loaded" && <p>Loading...</p>}
       {status == "loaded" && (
         <Image
