@@ -4,9 +4,11 @@ import React, { useState, useEffect } from "react";
 const BackgroundImageSlider = () => {
   const [galleryItem, setGalleryItem] = useState([]);
   const [imageNumber, setImageNumber] = useState(1);
-  const [startX, setStartX] = useState(Math.random() * screen.width - 200);
+  const [startX, setStartX] = useState(0) //Math.random() * screen.width - 200);
   const [imageLoaded, setImageLoaded] = useState(false); // New state variable
-
+  const [windowHeight, setWindowHeight] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(0);
+  
   const getGalleryItem = async () => {
     try {
       const response = await fetch("/api/galleryItem", {
@@ -37,8 +39,13 @@ const BackgroundImageSlider = () => {
   }, []);
 
   useEffect(() => {
+    setStartX(Math.random() * screen.width - 200);
     setImageNumber(Math.floor(Math.random() * galleryItem.length));
-  }, [galleryItem]);
+  }, [galleryItem, windowHeight, windowWidth]);
+
+  useEffect(() => {
+    setWindowHeight(window.screen.height);
+  }, []);
 
   useEffect(() => {
     let isMounted = true; // Add this line
@@ -76,12 +83,12 @@ const BackgroundImageSlider = () => {
       onLoad={() => setImageLoaded(true)} // New event handler
       style={{ filter: 'blur(2px)' }}
     />
-      <style jsx>{`
-        @keyframes move {
-          0% { transform: translate(0px, -200px;) }
-          100% { transform: translate(0px, ${screen.height + 200}px); }
-        }
-      `}</style>
+    <style jsx>{`
+      @keyframes move {
+        0% { transform: translate(0px, -200px;) }
+        100% { transform: translate(0px, ${windowHeight + 200}px); }
+      }
+    `}</style>
     </div>
   );
 }
