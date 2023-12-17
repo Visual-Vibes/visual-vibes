@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function ImageDisplay(props: any) {
   return (
-    <div>
+    <div className="bg-gray-900 p-4 rounded-xl space-y-2">
         {(props.image) && (
             <div className="flex flex-center">
                 <img
@@ -11,7 +11,7 @@ export default function ImageDisplay(props: any) {
                     src={URL.createObjectURL(props.image)}
                 />
                 <br />
-                <button className="text-vcinna"
+                <button className="text-gray-300 hover:text-purple-500 bg-transparent border border-purple-500 px-2 py-1 rounded"
                     onClick={() => {props.onRemove(null)}}>X   Change Image</button>
             </div>       
         )}

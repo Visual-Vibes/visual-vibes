@@ -61,5 +61,9 @@ export default async function CollectionPage({
 }) {
   const items = await getCollectionItems(params.collection);
 
-  return <CollectionGallery imageUrls={items.imageUrls} label={items.label} />;
+  return (
+    <div className="bg-gray-900 text-gray-300 p-8 rounded-xl">
+      <CollectionGallery imageUrls={items.imageUrls} label={items.label} />
+    </div>
+  );
 }

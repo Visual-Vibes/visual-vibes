@@ -54,31 +54,8 @@ const getGalleryItems = async (): Promise<GalleryItems> => {
 export default async function GalleryPage() {
   const galleryItems: GalleryItems = await getGalleryItems();
 
-  // const galleryItems = [
-  //   {
-  //     label: "Test1",
-  //     imageSrc: "https://picsum.photos/500",
-  //     description: "This is a test",
-  //   },
-  //   {
-  //     label: "Test2",
-  //     imageSrc: "https://picsum.photos/200",
-  //     description: "This is a test",
-  //   },
-  //   {
-  //     label: "Test3",
-  //     imageSrc: "https://picsum.photos/700",
-  //     description: "This is a test",
-  //   },
-  //   {
-  //     label: "Test4",
-  //     imageSrc: "https://picsum.photos/100",
-  //     description: "This is a test",
-  //   },
-  // ];
-
   return (
-    <div>
+    <div className="bg-transparent text-gray-300 p-4 rounded-xl space-y-2">
       <PublicGallery items={galleryItems.items} />
     </div>
   );

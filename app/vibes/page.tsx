@@ -92,10 +92,10 @@ export default function Vibes() {
   }
 
   return (
-    <div className="mt-20 mx-auto rounded-xl shadow-md overflow-hidden md:max-w-2xl bg-[#FBFADA]">
-      <div className="relative p-8 pt-2 pb-8 shadow-xl rounded-xl font-semibold m-4 bg-gray-50">
-          <div className="space-y-6 py-8 text-base leading-7 text-vgray divide-y-2 divide-gray-400">
-            <h2 className="text-indigo-600 text-xl">{statusText}</h2>
+    <div className="mt-20 mx-auto rounded-xl shadow-md overflow-hidden md:max-w-2xl bg-gray-900">
+      <div className="relative p-8 pt-2 pb-8 shadow-xl rounded-xl font-semibold m-3 bg-gray-800">
+          <div className="space-y-6 py-8 text-base leading-7 text-gray-300 divide-y-2 divide-gray-600">
+            <h2 className="text-purple-400 text-xl">{statusText}</h2>
             {generating === "not-started" && (
               <div>
                 <p className="mt-2 text-gray-500 font-light">
@@ -133,7 +133,7 @@ export default function Vibes() {
                       setMakePublic(e.target.checked);
                     }}
                   />
-                  <label htmlFor="makePublic">
+                  <label htmlFor="makePublic" className="text-gray-400">
                     {" "}
                     Make this submission public!
                   </label>
@@ -143,12 +143,12 @@ export default function Vibes() {
                 </p>
                 {/* Submission Button */}
                 <div className="pt-8 text-base font-semibold leading-7">
-                  <p>Ready?</p>
+                  <p className="text-gray-300">Ready?</p>
                   <p>
                     {" "}
                     <button
                       onClick={runOpenAIGen}
-                      className="text-orange-500 hover:text-sky-600"
+                      className="text-purple-500 hover:text-purple-700"
                     >
                       Take me to the vibes! &rarr;
                     </button>{" "}
@@ -162,7 +162,7 @@ export default function Vibes() {
                 <ImageSlider imageUrls={imgUrls} />
                 <div className="p-4  text-center flex-col justify-center items-center">
                   {!makePublic && (
-                    <p className="text-vcinna">
+                    <p className="text-gray-400">
                       Since your generation was private, it is only accessible
                       here.
                     </p>
