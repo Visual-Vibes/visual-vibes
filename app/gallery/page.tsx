@@ -55,7 +55,7 @@ export default async function GalleryPage() {
   const galleryItems: GalleryItems = await getGalleryItems();
 
   return (
-    <div className="bg-transparent text-gray-300 p-4 rounded-xl space-y-2">
+    <div className="bg-transparent text-gray-300 p-4 rounded-xl space-y-2 z-15">
       <PublicGallery items={galleryItems.items} />
     </div>
   );

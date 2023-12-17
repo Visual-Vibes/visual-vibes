@@ -7,8 +7,8 @@ import ImageDisplay from "@/components/ImageDisplay";
 import FieldInput from "@/components/FieldInput";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ImageSlider from "@/components/ImageSlider";
-import { url } from "inspector";
-import Auth from "@/components/Auth";
+import FloatingBackground from "@/components/FloatingBackground/FloatingBackground";
+
 export default function Vibes() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [apiKey, setApiKey] = useState("");
@@ -92,85 +92,87 @@ export default function Vibes() {
   }
 
   return (
-    <div className="mt-20 mx-auto rounded-xl shadow-md overflow-hidden md:max-w-2xl bg-gray-900">
-      <div className="relative p-8 pt-2 pb-8 shadow-xl rounded-xl font-semibold m-3 bg-gray-800">
-          <div className="space-y-6 py-8 text-base leading-7 text-gray-300 divide-y-2 divide-gray-600">
-            <h2 className="text-purple-400 text-xl">{statusText}</h2>
-            {generating === "not-started" && (
-              <div>
-                <p className="mt-2 text-gray-500 font-light">
-                  Note: We do not store your API key or your uploaded images.
-                </p>
-                <ImageDisplay
-                  image={selectedImage}
-                  onRemove={() => {
-                    setSelectedImage(null);
-                    setStatusText("Please upload a new image");
-                  }}
-                />
-                <br />
-
-                {/* Image Input */}
-                <ImageUploader onChange={onImageUpload} />
-
-                {/* API Key Input */}
-                <FieldInput
-                  placeholder={prevOpenAIKey}
-                  onChange={(e: any) => {
-                    setApiKey(e.target.value);
-                  }}
-                />
-
-                {/* Make Public Button */}
-                <div className="pt-10">
-                  {" "}
-                  <input
-                    type="checkbox"
-                    id="makePublic"
-                    name="Make Public"
-                    defaultChecked={true}
-                    onChange={(e) => {
-                      setMakePublic(e.target.checked);
-                    }}
-                  />
-                  <label htmlFor="makePublic" className="text-gray-400">
-                    {" "}
-                    Make this submission public!
-                  </label>
-                  </div>
-                <p className="mt-2 text-gray-500 font-light">
-                  Note: We do not store your API key or your uploaded images.
-                </p>
-                {/* Submission Button */}
-                <div className="pt-8 text-base font-semibold leading-7">
-                  <p className="text-gray-300">Ready?</p>
-                  <p>
-                    {" "}
-                    <button
-                      onClick={runOpenAIGen}
-                      className="text-purple-500 hover:text-purple-700"
-                    >
-                      Take me to the vibes! &rarr;
-                    </button>{" "}
-                  </p>
-                </div>
-              </div>
-            )}
-            {generating === "generating" && <LoadingSpinner />}
-            {generating === "finished" && (
-              <div>
-                <ImageSlider imageUrls={imgUrls} />
-                <div className="p-4  text-center flex-col justify-center items-center">
-                  {!makePublic && (
-                    <p className="text-gray-400">
-                      Since your generation was private, it is only accessible
-                      here.
+    <div className="">
+      <FloatingBackground />
+      <div className="z-20 relative">
+        <div className="mt-20 mx-auto rounded-xl shadow-md overflow-hidden md:max-w-2xl bg-gray-900">
+          <div className="relative p-8 pt-2 pb-8 shadow-xl rounded-xl font-semibold m-3 bg-gray-800">
+              <div className="space-y-6 py-8 text-base leading-7 text-gray-300 divide-y-2 divide-gray-600">
+                <h2 className="text-purple-400 text-xl">{statusText}</h2>
+                {generating === "not-started" && (
+                  <div>
+                    <p className="mt-2 text-gray-500 font-light">
+                      Note: We do not store your API key or your uploaded images.
                     </p>
-                  )}
-                  {/* <Auth /> */}
-                </div>
-              </div>
-            )}
+                    <ImageDisplay
+                      image={selectedImage}
+                      onRemove={() => {
+                        setSelectedImage(null);
+                        setStatusText("Please upload a new image");
+                      }}
+                    />
+                    <br />
+                    {/* Image Input */}
+                    <ImageUploader onChange={onImageUpload} />
+                    {/* API Key Input */}
+                    <FieldInput
+                      placeholder={prevOpenAIKey}
+                      onChange={(e: any) => {
+                        setApiKey(e.target.value);
+                      }}
+                    />
+                    {/* Make Public Button */}
+                    <div className="pt-10">
+                      {" "}
+                      <input
+                        type="checkbox"
+                        id="makePublic"
+                        name="Make Public"
+                        defaultChecked={true}
+                        onChange={(e) => {
+                          setMakePublic(e.target.checked);
+                        }}
+                      />
+                      <label htmlFor="makePublic" className="text-gray-400">
+                        {" "}
+                        Make this submission public!
+                      </label>
+                      </div>
+                    <p className="mt-2 text-gray-500 font-light">
+                      Note: We do not store your API key or your uploaded images.
+                    </p>
+                    {/* Submission Button */}
+                    <div className="pt-8 text-base font-semibold leading-7">
+                      <p className="text-gray-300">Ready?</p>
+                      <p>
+                        {" "}
+                        <button
+                          onClick={runOpenAIGen}
+                          className="text-purple-500 hover:text-purple-700"
+                        >
+                          Take me to the vibes! &rarr;
+                        </button>{" "}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {generating === "generating" && <LoadingSpinner />}
+                {generating === "finished" && (
+                  <div>
+                    <ImageSlider imageUrls={imgUrls} />
+                    <div className="p-4  text-center flex-col justify-center items-center">
+                      {!makePublic && (
+                        <p className="text-gray-400">
+                          Since your generation was private, it is only accessible
+                          here.
+                        </p>
+                      )}
+                      {/* <Auth /> */}
+                    </div>
+                  </div>
+                )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
