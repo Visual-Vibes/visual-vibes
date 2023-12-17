@@ -7,7 +7,6 @@ const BackgroundImageSlider = () => {
   const [startX, setStartX] = useState(0) //Math.random() * screen.width - 200);
   const [imageLoaded, setImageLoaded] = useState(false); // New state variable
   const [windowHeight, setWindowHeight] = useState(0);
-  const [windowWidth, setWindowWidth] = useState(0);
   
   const getGalleryItem = async () => {
     try {
@@ -41,7 +40,7 @@ const BackgroundImageSlider = () => {
   useEffect(() => {
     setStartX(Math.random() * screen.width - 200);
     setImageNumber(Math.floor(Math.random() * galleryItem.length));
-  }, [galleryItem, windowHeight, windowWidth]);
+  }, [galleryItem, windowHeight]);
 
   useEffect(() => {
     setWindowHeight(window.screen.height);
