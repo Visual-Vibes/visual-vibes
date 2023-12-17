@@ -8,7 +8,7 @@ import { useState } from "react";
 // Custom Components
 import Navbar from "@/components/Navbar";
 import Clock from "@/components/Clock";
-import FloatingBackground from "@/components/FloatingBackground";
+import FloatingBackground from "@/components/FloatingBackground/FloatingBackground";
 
 export default function Home() {
   const [hourCount, setHourCount] = useState(6);
