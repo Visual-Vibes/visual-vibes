@@ -4,15 +4,15 @@ export default function ImageDisplay(props: any) {
   return (
     <div>
         {(props.image) && (
-            <div>
+            <div className="flex flex-center">
                 <img
                     alt="not found"
-                    width={"250px"}
+                    className="w-64 h-48 object-contain pt-2"
                     src={URL.createObjectURL(props.image)}
                 />
                 <br />
-                <button
-                    onClick={() => {props.onRemove(null)}}>Remove</button>
+                <button className="text-vcinna"
+                    onClick={() => {props.onRemove(null)}}>X   Change Image</button>
             </div>       
         )}
     </div>

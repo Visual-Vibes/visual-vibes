@@ -10,7 +10,7 @@ const HowItWorksPage = () => {
           </div>
           <Link
             href="/vibes"
-            className="block mt-1 text-lg leading-tight font-medium text-black hover:underline"
+            className="block mt-1 text-lg leading-tight font-medium text-vgray hover:underline"
           >
             Bring Your Objects to Life
           </Link>

@@ -7,7 +7,25 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'vgray': {
+          DEFAULT: '#121317',
+        },
+        'vblue': {
+          DEFAULT: '#2E86AB',
+        },
+        'vvanil': {
+          DEFAULT: '#F6F5AE',
+        },
+        'vyellow': {
+          DEFAULT: '#F5F749',
+        },
+        'vcinna': {
+          DEFAULT: '#E55934',
+        },
+      },    
+    },
   },
   plugins: [],
 };
