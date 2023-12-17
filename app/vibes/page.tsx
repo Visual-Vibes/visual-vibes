@@ -1,15 +1,19 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { createClient } from "@supabase/supabase-js";
 import ImageUploader from "@/components/ImageUploader";
 import ImageDisplay from "@/components/ImageDisplay";
 import FieldInput from "@/components/FieldInput";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ImageSlider from "@/components/ImageSlider";
-import FloatingBackground from "@/components/FloatingBackground/FloatingBackground";
+import dynamic from "next/dynamic";
 
 export default function Vibes() {
+  // Use dynamic imports for FloatingBackground and WelcomeImage
+  const FloatingBackground = dynamic(
+    () => import('@/components/FloatingBackground/FloatingBackground'),
+    { ssr: false }
+  );
   const [selectedImage, setSelectedImage] = useState(null);
   const [apiKey, setApiKey] = useState("");
   const [statusText, setStatusText] = useState(

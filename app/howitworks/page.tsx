@@ -1,7 +1,14 @@
 'use client'
 import Link from "next/link";
-import FloatingBackground from "@/components/FloatingBackground/FloatingBackground";
+import dynamic from "next/dynamic";
+
 const HowItWorksPage = () => {
+
+  // Use dynamic imports for FloatingBackground 
+  const FloatingBackground = dynamic(
+    () => import('@/components/FloatingBackground/FloatingBackground'),
+    { ssr: false }
+  );
   return (
     <div>
       <FloatingBackground />
