@@ -97,7 +97,7 @@ async function writeSupabaseFolder(folderName: string, isPublic: string, mainSub
 
     const entry = [
         {
-        galleryFolder: folderNameHash,
+        galleryFolder: folderName,
         isPublic: isPublic,
         label: mainSubject,
         },
