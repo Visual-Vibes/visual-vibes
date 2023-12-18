@@ -68,7 +68,7 @@ export default function Vibes() {
         method: "POST",
         body: formData,
       });
-
+      console.log('sent request')
       if (response.ok) {
         // If the response status is OK (2xx), parse the JSON data
         var responseData = await response.json();
@@ -84,10 +84,12 @@ export default function Vibes() {
       } else {
         // Handle non-OK response (e.g., error handling)
         console.error("Error:", response.status, response.statusText);
+        console.log('didnt get vibes :(')
       }
     } catch (error) {
       // Handle network or other errors
       console.error("Error:", error);
+      console.log('didnt get vibes, caught an error :(')
     }
     const urlStrings = responseData.urls;
     setImgUrls(urlStrings);
