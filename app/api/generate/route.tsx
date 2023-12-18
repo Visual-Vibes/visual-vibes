@@ -6,11 +6,10 @@ import { decode } from "base64-arraybuffer";
 
 export async function POST(request: NextRequest) {
   // Get main subject from request
-  const req = await request.json();
-
-  const mainSubject = req.mainSubject;
-  const apiKey = req.apiKey;
-  const folderName = req.folder;
+  const data = await request.formData();
+  const mainSubject: string = data.get("subject") as unknown as string;
+  const folderName = data.get("folder") as unknown as string;
+  const apiKey = data.get("apiKey") as unknown as string;
 
   // Make supabase and openai clients
   const supabase = createClient(
@@ -23,8 +22,8 @@ export async function POST(request: NextRequest) {
   // Generate and save all images
   // Get public urls in return
   const urlList = await generateImagesFromMainSubject(
-    folderName,
     mainSubject,
+    folderName,
     supabase,
     openAIClient
   );
@@ -67,6 +66,7 @@ async function generateImagesFromMainSubject(
   );
 
   const allPrompts = await Promise.all([wakeup, morning, noon, night]);
+  console.log("Constructed all image prompts");
 
   // Generate all scenes
   let sceneList = [];
@@ -85,6 +85,7 @@ async function generateImagesFromMainSubject(
       "; I NEED the image to be realistic. DO NOT create an illustration. Add black bars image fit in a 16:9 aspect ratio."
     );
   });
+  console.log("Generated all scenes");
 
   // Generate all images
   const imageList = [];
@@ -104,10 +105,10 @@ async function generateImagesFromMainSubject(
   const allImages = (await Promise.all(imageList)).map((res) => {
     return res.data[0].b64_json;
   });
+  console.log("Generated all images");
 
   // Write all images to supabase
   const allImageSaveResponses = [];
-  const usedImageNames = [];
   for (let i = 0; i < allImages.length; i++) {
     const response = writeImageToSupabase(
       folderName,
@@ -115,12 +116,15 @@ async function generateImagesFromMainSubject(
       allImages[i] as string,
       supabase
     );
-    usedImageNames.push(`image_${i}`);
     allImageSaveResponses.push(response);
   }
+  await Promise.all(allImageSaveResponses);
+  console.log("Wrote all images to supabase");
 
   // Get all public Urls of images
   const urlList = await getImageUrlsInFolder(folderName, "gallery", supabase);
+  console.log("Got all public urls of images:");
+  console.log(urlList);
 
   return urlList;
 }
