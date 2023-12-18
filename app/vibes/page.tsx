@@ -160,7 +160,10 @@ export default function Vibes() {
                     </div>
                   </div>
                 )}
-                {generating === "generating" && <LoadingSpinner />}
+                {generating === "generating" && 
+                  <LoadingSpinner />
+                }
+
                 {generating === "finished" && (
                   <div>
                     <ImageSlider imageUrls={imgUrls} />

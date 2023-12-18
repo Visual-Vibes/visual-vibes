@@ -12,24 +12,21 @@ const HowItWorksPage = () => {
   return (
     <div>
       <FloatingBackground />
-      <div className="z=20">
+      <div className="z-20">
         <div className="mt-20 mx-auto rounded-xl shadow-md overflow-hidden md:max-w-2xl bg-gray-900 p-3">
           <div className="max-w-md mx-auto bg-gray-800 p-8 rounded-xl shadow-md overflow-hidden md:max-w-2xl space-y-4">
             <div className="md:flex">
               <div className="text-gray-300">
-                <div className="uppercase tracking-wide text-sm text-purple-400 font-semibold">
+                <div className="uppercase tracking-wide text-xl text-purple-400 font-semibold">
                   Visual Vibes
                 </div>
-                <Link
-                  href="/vibes"
-                  className="block mt-1 text-lg leading-tight font-medium text-gray-300 hover:underline hover:text-purple-500"
-                >
-                  Bring Your Objects to Life
-                </Link>
+                <p className="block mt-1 text-lg leading-tight font-medium text-gray-300 italic">
+                  Bring Your Objects to Life 
+                  </p>
                 <p className="mt-2 text-gray-500">
                   Transform everyday objects into characters living a human life. Our
                   app, Visual Vibes, generates a sequence of images showing your
-                  character in daily activities – from morning routines to evening
+                  character performing human-like daily activities – from morning routines to evening
                   relaxation.
                 </p>
                 <h3 className="mt-4 text-lg leading-tight font-medium text-gray-300">
