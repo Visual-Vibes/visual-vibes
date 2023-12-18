@@ -14,11 +14,7 @@ export async function POST(request: NextRequest) {
   console.log("apiKey", apiKey);
 
   if (!file) {
-    return NextResponse.json({
-      success: false,
-      couldNotIdentifyMainSubject: false,
-      urls: [],
-    });
+    return NextResponse.json({ status: 503, message: 'No File' });
   }
 
   // Assuming 'fileName' is the name of your uploaded image file
@@ -41,7 +37,7 @@ export async function POST(request: NextRequest) {
   if (!res) {
     console.log("Error generating vibes");
     return NextResponse.json({
-      success: false,
+      status: 502,
       couldNotIdentifyMainSubject: false,
       urls: [],
     });
@@ -50,7 +46,7 @@ export async function POST(request: NextRequest) {
   if (res.mainSubject == null) {
     // Could not identify a main subject
     return NextResponse.json({
-      success: false,
+      status: 501,
       couldNotIdentifyMainSubject: true,
       urls: [],
     });
@@ -72,7 +68,7 @@ export async function POST(request: NextRequest) {
   if (error) {
     console.log("Error inserting sequence entry into table", error);
     return NextResponse.json({
-      success: false,
+      status: 504,
       couldNotIdentifyMainSubject: false,
       urls: [],
     });
@@ -98,8 +94,8 @@ export async function POST(request: NextRequest) {
   return toRespond;
 }
 
-function removeFileExtension(filename: string): string {
-  return filename.replace(/\.[^/.]+$/, "");
-}
+// function removeFileExtension(filename: string): string {
+//   return filename.replace(/\.[^/.]+$/, "");
+// }
 
 
