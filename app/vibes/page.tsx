@@ -96,7 +96,7 @@ export default function Vibes() {
         formData.append("prompt", prompt);
         formData.append("apiKey", apiKey);
         formData.append("folder", folder);
-        await sendPostRequest('/api/generate', formData);
+        await sendPostRequest('/api/generate/image', formData);
       }
     }
 
