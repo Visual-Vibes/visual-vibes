@@ -27,7 +27,6 @@ export async function POST(request: NextRequest) {
   const imgString = `data:${file.type};base64,${buffer.toString("base64")}`;
   // Get image type and construct image string
 
-  await writeFile(`public/upload/${file.name}`, buffer);
   console.log(`open ${path} to see the uploaded file`);
 
   const supabase = createClient(
