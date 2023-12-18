@@ -7,7 +7,6 @@ import FieldInput from "@/components/FieldInput";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ImageSlider from "@/components/ImageSlider";
 import dynamic from "next/dynamic";
-
 async function sendPostRequest(endpoint: string, formData: any) { 
   try {
         const response = await fetch(endpoint, {
@@ -31,7 +30,6 @@ async function sendPostRequest(endpoint: string, formData: any) {
         return {}
   }
 }
-
 
 
 export default function Vibes() {
@@ -83,14 +81,30 @@ export default function Vibes() {
       return response;
     }
 
-    async function addImages(prompt: string, apiKey: string, folder: string) {
-      const formData = new FormData()
-      formData.append("subject", prompt);
+    async function getImagePrompts(subject: string) {
+    // Create a FormData object and append the image file to it
+      const formData = new FormData();
+      formData.append("subject", subject);
       formData.append("apiKey", apiKey);
+      const response = await sendPostRequest('/api/prompts', formData);
+      return response;
+    }
+
+    async function generateImages(prompts: string[], apiKey: string, folder: string) {
+      for (const prompt of prompts) {
+        const formData = new FormData();
+        formData.append("prompt", prompt);
+        formData.append("apiKey", apiKey);
+        formData.append("folder", folder);
+        await sendPostRequest('/api/generate', formData);
+      }
+    }
+
+    async function getImgUrls(folder: string) {
+      const formData = new FormData();
       formData.append("folder", folder);
-      const response = await sendPostRequest('/api/generate', formData);
-      const urlStrings = response.urls;
-      setImgUrls(urlStrings);
+      const response = await sendPostRequest('/api/generate/geturls', formData);
+      return response;
     }
     
     // Prevent default form submission behavior
@@ -108,11 +122,13 @@ export default function Vibes() {
     setPrevOpenAIKey(apiKey);
 
     // Get subject from image
-    const response = await getSubjectAndFolder();
-    console.log(response)
-    
+    const folderResponse = await getSubjectAndFolder();
+    console.log(folderResponse)
+
+    const folder = folderResponse.folder;
     //Ensure subject was retrieved
-    if (response.subject == 'failed') {
+
+    if (folderResponse.subject == 'failed') {
       setStatusText(
         "Could not identify a main subject in your image. Please try again with a different image."
       );
@@ -120,8 +136,16 @@ export default function Vibes() {
     }
 
     // Call api to generate images
-    await addImages(response.subject, apiKey, response.folder);
+    const promptResponse = await getImagePrompts(folderResponse.subject);
     
+    console.log(promptResponse)
+
+    // Generate images from prompts
+    await generateImages(promptResponse.scenes, apiKey, folderResponse.folder);
+
+    const urlResponse = await getImgUrls(folderResponse.folder);
+    setImgUrls(urlResponse.urls);
+
     setStatusText("Vibes Have Been Generated!");
     setGenerating("finished");
   }

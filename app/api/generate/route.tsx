@@ -47,45 +47,6 @@ async function generateImagesFromMainSubject(
   supabase: SupabaseClient,
   openAIClient: OpenAI
 ) {
-  // Get all image prompts
-  const wakeup = constructImagePrompt(
-    mainSubject,
-    "It's 7 am! the main character is just waking up and is performing their morning (human-like) routine."
-  );
-  const morning = constructImagePrompt(
-    mainSubject,
-    "The main character is getting ready for the day by sitting at their table with a quality breakfast that they have cooked."
-  );
-  const noon = constructImagePrompt(
-    mainSubject,
-    "it's time for work! The main character is at their desk, on their computer, or working through their tasks for the day."
-  );
-  const night = constructImagePrompt(
-    mainSubject,
-    "it's bed time! The main character is getting ready for bed by brushing their teeth."
-  );
-
-  const allPrompts = await Promise.all([wakeup, morning, noon, night]);
-  console.log("Constructed all image prompts");
-
-  // Generate all scenes
-  let sceneList = [];
-  for (let i = 0; i < allPrompts.length; i++) {
-    const response = openAIClient.chat.completions.create({
-      messages: [{ role: "user", content: `${allPrompts[i]}` }],
-      model: "gpt-3.5-turbo",
-    });
-
-    sceneList.push(response);
-  }
-
-  const allScenes = (await Promise.all(sceneList)).map((res) => {
-    return (
-      res.choices[0].message.content +
-      "; I NEED the image to be realistic. DO NOT create an illustration. Add black bars image fit in a 16:9 aspect ratio."
-    );
-  });
-  console.log("Generated all scenes");
 
   // Generate all images
   const imageList = [];
