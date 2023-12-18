@@ -7,6 +7,33 @@ import FieldInput from "@/components/FieldInput";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ImageSlider from "@/components/ImageSlider";
 import dynamic from "next/dynamic";
+import getImageUrlsInFolder from "@/utils/getImageUrlsInFolder";
+
+async function sendPostRequest(endpoint: string, formData: any) { 
+  try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          body: formData,
+        });
+        console.log('sent request to ' + endpoint)
+        if (response.ok) {
+          // If the response status is OK (2xx), parse the JSON data
+          var responseData = await response.json();
+          // console.log(responseData);
+          // Now responseData contains the data from the API response
+          return responseData;
+        } else {
+          // Handle non-OK response (e.g., error handling)
+          console.error('Post request to ' + endpoint + ' returned error',  response.status, response.statusText)
+        }
+      } catch (error) {
+        // Handle network or other errors
+        console.error('Post request to ' + endpoint + ' did not respond')
+        return {}
+  }
+}
+
+
 
 export default function Vibes() {
   // Use dynamic imports for FloatingBackground and WelcomeImage
@@ -41,58 +68,94 @@ export default function Vibes() {
     }
   };
 
+
+
   async function runOpenAIGen(e: any) {
-    //TODO: PREVENT SUBMISSION WHILE LOADING
-    e.preventDefault();
-    if (!selectedImage) {
-      setStatusText("Please upload an image before submitting.");
-      return;
+
+    async function getSubject() {
+      // Create a FormData object and append the image file to it
+      const formData = new FormData();
+      if (!selectedImage) {
+        setStatusText("Please upload an image before submitting.");
+        return;
+      }
+      formData.append("starterImage", selectedImage);
+      formData.append("apiKey", apiKey);
+      formData.append("makePublic", makePublic.toString());
+      const response = await sendPostRequest('/api/recognize', formData);
+      return response.subject;
     }
+
+    async function addImage(prompt: string, apiKey: string) {
+      
+    }
+    let moreToGenerate = true;
+    while(moreToGenerate) {
+      moreToGenerate = await addImage
+    }
+
+
+
+    e.preventDefault();
+
     if (!apiKey) {
       setStatusText("Please add your API Key before submitting.");
       return;
     }
+    
 
     setGenerating("generating");
     setStatusText("Vibes generating... please be patient!");
     setPrevOpenAIKey(apiKey);
 
-    // Create a FormData object and append the image file to it
-    const formData = new FormData();
-    formData.append("starterImage", selectedImage);
-    formData.append("apiKey", apiKey);
-    formData.append("makePublic", makePublic.toString());
-    // Send data to the '/api/generate' route
-    try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        body: formData,
-      });
-      console.log('sent request')
-      if (response.ok) {
-        // If the response status is OK (2xx), parse the JSON data
-        var responseData = await response.json();
-        if (responseData.couldNotIdentifyMainSubject) {
-          setStatusText(
-            "Could not identify a main subject in your image. Please try again with a different image."
-          );
-          setGenerating("not-started");
-          return;
-        }
-        // console.log(responseData);
-        // Now responseData contains the data from the API response
-      } else {
-        // Handle non-OK response (e.g., error handling)
-        console.error("Error:", response.status, response.statusText);
-        console.log('didnt get vibes :(')
-      }
-    } catch (error) {
-      // Handle network or other errors
-      console.error("Error:", error);
-      console.log('didnt get vibes, caught an error :(')
+    const subject = await getSubject();
+    console.log(subject)
+    
+    //Ensure subject was retrieved
+    if (subject == 'failed') {
+      setStatusText(
+        "Could not identify a main subject in your image. Please try again with a different image."
+      );
+      setGenerating("not-started");
     }
-    const urlStrings = responseData.urls;
-    setImgUrls(urlStrings);
+
+    // Create a FormData object and append the image file to it
+    // const formData = new FormData();
+    // formData.append("starterImage", selectedImage);
+    // formData.append("apiKey", apiKey);
+    // formData.append("makePublic", makePublic.toString());
+
+    // // Send data to the '/api/generate' route
+    // try {
+    //   const response = await fetch("/api/generate", {
+    //     method: "POST",
+    //     body: formData,
+    //   });
+    //   console.log('sent request')
+    //   if (response.ok) {
+    //     // If the response status is OK (2xx), parse the JSON data
+    //     var responseData = await response.json();
+    //     if (responseData.couldNotIdentifyMainSubject) {
+    //       setStatusText(
+    //         "Could not identify a main subject in your image. Please try again with a different image."
+    //       );
+    //       setGenerating("not-started");
+    //       return;
+    //     }
+    //     // console.log(responseData);
+    //     // Now responseData contains the data from the API response
+    //   } else {
+    //     // Handle non-OK response (e.g., error handling)
+    //     console.error("Error:", response.status, response.statusText);
+    //     console.log('didnt get vibes :(')
+    //   }
+    // } catch (error) {
+    //   // Handle network or other errors
+    //   console.error("Error:", error);
+    //   console.log('didnt get vibes, caught an error :(')
+    // }
+    // const urlStrings = responseData.urls;
+    // setImgUrls(urlStrings);
     setStatusText("Vibes Have Been Generated!");
     setGenerating("finished");
   }

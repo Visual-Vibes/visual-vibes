@@ -5,29 +5,29 @@ import { getVibes, generateImagePrompts } from "./openAIUtils";
 import path from "path";
 
 export async function POST(request: NextRequest) {
-  const data = await request.formData();
-  const file: File | null = data.get("starterImage") as unknown as File;
-  const isPublic = data.get("makePublic") as unknown as string;
-  const apiKey = data.get("apiKey") as unknown as string;
-  console.log("isPublic", isPublic);
-  console.log("apiKey", apiKey);
+  // const data = await request.formData();
+  // const file: File | null = data.get("starterImage") as unknown as File;
+  // const isPublic = data.get("makePublic") as unknown as string;
+  // const apiKey = data.get("apiKey") as unknown as string;
+  // console.log("isPublic", isPublic);
+  // console.log("apiKey", apiKey);
 
-  if (!file) {
-    return NextResponse.json({
-      success: false,
-      couldNotIdentifyMainSubject: false,
-      urls: [],
-    });
-  }
+  // if (!file) {
+  //   return NextResponse.json({
+  //     success: false,
+  //     couldNotIdentifyMainSubject: false,
+  //     urls: [],
+  //   });
+  // }
 
-  // Assuming 'fileName' is the name of your uploaded image file
+  // // Assuming 'fileName' is the name of your uploaded image file
 
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-  const imgString = `data:${file.type};base64,${buffer.toString("base64")}`;
-  // Get image type and construct image string
+  // const bytes = await file.arrayBuffer();
+  // const buffer = Buffer.from(bytes);
+  // const imgString = `data:${file.type};base64,${buffer.toString("base64")}`;
+  // // Get image type and construct image string
 
-  console.log(`open ${path} to see the uploaded file`);
+  // console.log(`open ${path} to see the uploaded file`);
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL as string,
