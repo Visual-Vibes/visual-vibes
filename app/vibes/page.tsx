@@ -91,11 +91,14 @@ export default function Vibes() {
     }
 
     async function generateImages(prompts: string[], apiKey: string, folder: string) {
+      let index = 0;
       for (const prompt of prompts) {
         const formData = new FormData();
         formData.append("prompt", prompt);
         formData.append("apiKey", apiKey);
         formData.append("folder", folder);
+        formData.append("index", index.toString())
+        index++;
         await sendPostRequest('/api/generate/image', formData);
       }
     }
