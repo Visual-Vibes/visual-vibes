@@ -1,18 +1,17 @@
-'use client'
+"use client";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
 const HowItWorksPage = () => {
-
-  // Use dynamic imports for FloatingBackground 
+  // Use dynamic imports for FloatingBackground
   const FloatingBackground = dynamic(
-    () => import('@/components/FloatingBackground/FloatingBackground'),
+    () => import("@/components/FloatingBackground/FloatingBackground"),
     { ssr: false }
   );
   return (
     <div>
       <FloatingBackground />
-      <div className="z-20">
+      <div className="z-20 relative">
         <div className="mt-20 mx-auto rounded-xl shadow-md overflow-hidden md:max-w-2xl bg-gray-900 p-3">
           <div className="max-w-md mx-auto bg-gray-800 p-8 rounded-xl shadow-md overflow-hidden md:max-w-2xl space-y-4">
             <div className="md:flex">
@@ -21,13 +20,13 @@ const HowItWorksPage = () => {
                   Visual Vibes
                 </div>
                 <p className="block mt-1 text-lg leading-tight font-medium text-gray-300 italic">
-                  Bring Your Objects to Life 
-                  </p>
+                  Bring Your Objects to Life
+                </p>
                 <p className="mt-2 text-gray-500">
-                  Transform everyday objects into characters living a human life. Our
-                  app, Visual Vibes, generates a sequence of images showing your
-                  character performing human-like daily activities – from morning routines to evening
-                  relaxation.
+                  Transform everyday objects into characters living a human
+                  life. Our app, Visual Vibes, generates a sequence of images
+                  showing your character performing human-like daily activities
+                  – from morning routines to evening relaxation.
                 </p>
                 <h3 className="mt-4 text-lg leading-tight font-medium text-gray-300">
                   How to Use:
@@ -40,10 +39,12 @@ const HowItWorksPage = () => {
                 </ol>
                 <p className="mt-3">
                   <Link href="/gallery">
-                    <span className="font-semibold text-purple-400 hover:text-purple-500">Explore our gallery </span>
+                    <span className="font-semibold text-purple-400 hover:text-purple-500">
+                      Explore our gallery{" "}
+                    </span>
                   </Link>
-                  for inspiration and see how ordinary objects can gain extraordinary
-                  lives!
+                  for inspiration and see how ordinary objects can gain
+                  extraordinary lives!
                 </p>
               </div>
             </div>
