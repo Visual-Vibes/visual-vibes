@@ -97,7 +97,7 @@ export default function Vibes() {
 
   return (
     <div className="">
-      <FloatingBackground />
+      {/* <FloatingBackground /> */}
       <div className="z-20 relative">
         <div className="mt-20 mx-auto rounded-xl shadow-md overflow-hidden md:max-w-2xl bg-gray-900">
           <div className="relative p-8 pt-2 pb-8 shadow-xl rounded-xl font-semibold m-3 bg-gray-800">
