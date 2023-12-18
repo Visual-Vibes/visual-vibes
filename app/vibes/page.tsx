@@ -106,15 +106,15 @@ export default function Vibes() {
         formData.append("folder", folder);
         formData.append("index", index.toString());
         index++;
-        await sendPostRequest("/api/generate/image", formData);
-        console.log("Returned from /api/generate/image");
+        await sendPostRequest("/api/image", formData);
+        console.log("Returned from /api/image");
       }
     }
 
     async function getImgUrls(folder: string) {
       const formData = new FormData();
       formData.append("folder", folder);
-      const response = await sendPostRequest("/api/generate/geturls", formData);
+      const response = await sendPostRequest("/api/geturls", formData);
       return response;
     }
 
