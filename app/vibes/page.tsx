@@ -81,13 +81,14 @@ export default function Vibes() {
       formData.append("apiKey", apiKey);
       formData.append("makePublic", makePublic.toString());
       const response = await sendPostRequest('/api/recognize', formData);
-      return response ;
+      return response;
     }
 
-    async function addImages(prompt: string, apiKey: string) {
+    async function addImages(prompt: string, apiKey: string, folder: string) {
       const formData = new FormData()
       formData.append("subject", prompt);
       formData.append("apiKey", apiKey);
+      formData.append("folder", folder);
       const response = await sendPostRequest('/api/generate', formData);
       const urlStrings = response.urls;
       setImgUrls(urlStrings);
@@ -120,7 +121,7 @@ export default function Vibes() {
     }
 
     // Call api to generate images
-    await addImages(response.subject, apiKey);
+    await addImages(response.subject, apiKey, response.folder);
     
     setStatusText("Vibes Have Been Generated!");
     setGenerating("finished");
