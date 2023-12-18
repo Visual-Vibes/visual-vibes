@@ -9,6 +9,7 @@ export async function POST(request: NextRequest) {
   const prompt = data.get("prompt") as unknown as string;
   const apiKey = data.get("apiKey") as unknown as string;
   const folder = data.get("folder") as unknown as string;
+  const index = data.get("index") as unknown as string;
 
   // Make supabase and openai clients
   const supabase = createClient(
@@ -28,7 +29,12 @@ export async function POST(request: NextRequest) {
 
   const image_b64 = response.data[0].b64_json;
 
-  await writeImageToSupabase(folder, "image", image_b64 as string, supabase);
+  await writeImageToSupabase(
+    folder,
+    `image_${index}`,
+    image_b64 as string,
+    supabase
+  );
 
   // Generate a single image from the prompt
   return NextResponse.json({ success: true });
