@@ -101,7 +101,7 @@ export const generateImagePrompts = async (
     mainSubject,
     "it's bed time! The main character is getting ready for bed by brushing their teeth."
   );
-  const instructionsList = [wakeup, morning, noon, night];
+  const instructionsList = [wakeup]; //, morning, noon, night];
 
   const promptList: string[] = [];
   for (const instruction of instructionsList) {
