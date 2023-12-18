@@ -1,6 +1,8 @@
 # VISUAL VIBES
 ## Bring Your Objects to Life!
 
+https://www.visualvibes.life
+
 Transform everyday objects into characters living a human life. Our app, Visual Vibes, generates a sequence of images showing your character performing human-like daily activities – from morning routines to evening relaxation.
 
 *How to Use*:
