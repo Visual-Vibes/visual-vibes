@@ -2,7 +2,6 @@ import { SupabaseClient, createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile } from "fs/promises";
 import { getVibes, generateImagePrompts } from "./openAIUtils";
-import { getImageUrlsInFolder } from "./getImgUrls";
 import path from "path";
 
 export async function POST(request: NextRequest) {
@@ -14,7 +13,11 @@ export async function POST(request: NextRequest) {
   console.log("apiKey", apiKey);
 
   if (!file) {
-    return NextResponse.json({ status: 503, message: 'No File' });
+    return NextResponse.json({
+      success: false,
+      couldNotIdentifyMainSubject: false,
+      urls: [],
+    });
   }
 
   // Assuming 'fileName' is the name of your uploaded image file
@@ -37,7 +40,7 @@ export async function POST(request: NextRequest) {
   if (!res) {
     console.log("Error generating vibes");
     return NextResponse.json({
-      status: 502,
+      success: false,
       couldNotIdentifyMainSubject: false,
       urls: [],
     });
@@ -46,7 +49,7 @@ export async function POST(request: NextRequest) {
   if (res.mainSubject == null) {
     // Could not identify a main subject
     return NextResponse.json({
-      status: 501,
+      success: false,
       couldNotIdentifyMainSubject: true,
       urls: [],
     });
@@ -68,7 +71,7 @@ export async function POST(request: NextRequest) {
   if (error) {
     console.log("Error inserting sequence entry into table", error);
     return NextResponse.json({
-      status: 504,
+      success: false,
       couldNotIdentifyMainSubject: false,
       urls: [],
     });
@@ -94,8 +97,40 @@ export async function POST(request: NextRequest) {
   return toRespond;
 }
 
-// function removeFileExtension(filename: string): string {
-//   return filename.replace(/\.[^/.]+$/, "");
-// }
+function removeFileExtension(filename: string): string {
+  return filename.replace(/\.[^/.]+$/, "");
+}
 
+async function getImageUrlsInFolder(
+  folderName: string,
+  storageBucket: string,
+  supabase: SupabaseClient
+) {
+  try {
+    const { data: files, error } = await supabase.storage
+      .from(storageBucket) // replace with your storage bucket name
+      .list(folderName);
 
+    if (error) {
+      throw error;
+    }
+
+    if (files) {
+      // Construct URLs for each file in the folder
+      const imageUrls = files.map((file) => {
+        return supabase.storage
+          .from(storageBucket) // replace with your storage bucket name
+          .getPublicUrl(`${folderName}/${file.name}`);
+      });
+      const urlList = imageUrls.map((json) => {
+        return json.data.publicUrl;
+      });
+      return urlList;
+    }
+
+    return [];
+  } catch (error) {
+    console.error("Error fetching image URLs:", error);
+    throw error;
+  }
+}
