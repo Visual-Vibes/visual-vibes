@@ -7,7 +7,6 @@ import FieldInput from "@/components/FieldInput";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ImageSlider from "@/components/ImageSlider";
 import dynamic from "next/dynamic";
-import getImageUrlsInFolder from "@/utils/getImageUrlsInFolder";
 
 async function sendPostRequest(endpoint: string, formData: any) { 
   try {
