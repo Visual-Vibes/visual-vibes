@@ -51,7 +51,7 @@ async function generateImagesFromMainSubject(
   // Generate all images
   const imageList = [];
   for (let i = 0; i < allScenes.length; i++) {
-    const response = await openAIClient.images.generate({
+    const response = openAIClient.images.generate({
       model: "dall-e-3",
       prompt: allScenes[i],
       n: 1,
