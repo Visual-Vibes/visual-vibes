@@ -36,7 +36,7 @@ const getGalleryItems = async (): Promise<GalleryItems> => {
 
     const { data } = supabase.storage
       .from("gallery")
-      .getPublicUrl(`${folderName}/image0.png`);
+      .getPublicUrl(`${folderName}/image_0.png`);
 
     const collection: Collection = {
       folder: folderName,
